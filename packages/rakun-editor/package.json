@@ -1,7 +1,7 @@
 {
   "name": "rakun-editor",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "rakun-engine": "*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
