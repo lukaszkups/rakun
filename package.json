@@ -1,0 +1,29 @@
+{
+  "name": "rakun",
+  "version": "0.0.1",
+  "description": "Simple to use 2D game engine.",
+  "workspaces": [
+    "packages/rakun-engine",
+    "packages/rakun-editor"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukaszkups/rakun.git"
+  },
+  "keywords": [
+    "game-engine",
+    "gamedev",
+    "javascript",
+    "game-engine-2d"
+  ],
+  "author": "lukaszkups",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukaszkups/rakun/issues"
+  },
+  "homepage": "https://github.com/lukaszkups/rakun#readme"
+}
