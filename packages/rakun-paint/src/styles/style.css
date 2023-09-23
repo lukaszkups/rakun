@@ -1,0 +1,36 @@
+.rkn-paint__wrapper {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.rkn-paint__canvas-wrapper {
+  flex: 5;
+}
+
+.rkn-paint__sidebar {
+  flex: 1;
+}
+
+.rkn-color-picker-input {
+  display: none;
+}
+
+.rkn-color-picker-input-label {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  cursor: pointer;
+  margin-right: 5px;
+
+  span {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.rkn-inline {
+  display: flex;
+}
