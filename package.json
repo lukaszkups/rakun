@@ -4,7 +4,8 @@
   "description": "Simple to use 2D game engine.",
   "workspaces": [
     "packages/rakun-engine",
-    "packages/rakun-editor"
+    "packages/rakun-editor",
+    "packages/rakun-paint"
   ],
   "main": "index.js",
   "scripts": {
