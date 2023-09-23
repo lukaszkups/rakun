@@ -1,0 +1,81 @@
+@mixin unselectable {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+
+  /*
+    Introduced in Internet Explorer 10.
+    See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+  */
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.rkn-paint__wrapper {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.rkn-paint__canvas-wrapper {
+  flex: 5;
+}
+
+.rkn-paint__sidebar {
+  flex: 1;
+}
+
+.rkn-color-picker-input {
+  display: none;
+}
+
+.rkn-color-picker-input-label {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  cursor: pointer;
+  margin-right: 5px;
+
+  span {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.rkn-inline {
+  display: flex;
+}
+
+.rkn-paint__sidebar-element-title {
+  @include unselectable;
+
+  &--collapsed {
+    & + .rkn-paint__sidebar-element-content {
+      height: 0;
+      display: block;
+      overflow: hidden;
+    }
+  }
+}
+
+button {
+  @include unselectable;
+  all: unset;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid #555;
+  cursor: pointer;
+
+  &:hover {
+    border-color: crimson;
+    color: crimson;
+  }
+
+  &.active {
+    border-color: greenyellow;
+    color: greenyellow;
+  }
+}

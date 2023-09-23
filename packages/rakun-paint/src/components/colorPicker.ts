@@ -1,4 +1,5 @@
 import { HTMLElementEvent } from '@/helpers/types';
+import RakunPaintStore from '@/store/store';
 
 export const syncInputs = (event: HTMLElementEvent, scenario: String, colorPickerInput: HTMLInputElement | null, colorPickerText: HTMLInputElement | null) => {
   if (scenario === 'text' && colorPickerText) {
@@ -39,9 +40,16 @@ export const syncColorTileWithValues = () => {
   const colorPickerInputLabel = document.querySelector('#rkn-color-picker__input-label span') as HTMLInputElement;
   const rangeInput = document.getElementById('rkn-color-picker__alpha') as HTMLInputElement;
 
-  colorPickerInputLabel.style.backgroundColor = colorPickerInput.value || '#000';
+  colorPickerInputLabel.style.backgroundColor = colorPickerInput.value || '#000000';
   colorPickerInputLabel.style.opacity = String((Number(rangeInput.value || 100)/100));
 }
+
+export const addColorToPalette = () => {
+  const colorPickerInput = document.getElementById('rkn-color-picker__input') as HTMLInputElement;
+  const rangeInput = document.getElementById('rkn-color-picker__alpha') as HTMLInputElement;
+  RakunPaintStore.saveColor(colorPickerInput.value || '#000000', rangeInput.value);
+}
+
 
 export const setupColorPicker = async (element: HTMLElement | null) => {
   if (element) {
@@ -53,12 +61,15 @@ export const setupColorPicker = async (element: HTMLElement | null) => {
       </div>
       <input id="rkn-color-picker__alpha" name="color-picker-alpha" type="range" min="0" max="100" value="100" />
       <label for="color-picker-alpha" id="rkn-color-picker__alpha-value">100</label>
+      <div></div>
+      <button id="rkn-color-picker__save-button" class="rkn-paint__tools-button">Add to palette</button>
     `;
 
     await setTimeout(() => {
       const colorPickerInput = document.getElementById('rkn-color-picker__input') as HTMLInputElement;
       const colorPickerInputLabel = document.getElementById('rkn-color-picker__input-label') as HTMLInputElement;
       const colorPickerText = document.getElementById('rkn-color-picker__text') as HTMLInputElement;
+      const colorPickerSaveButton = document.getElementById('rkn-color-picker__save-button') as HTMLButtonElement;
       const rangeInput = document.getElementById('rkn-color-picker__alpha') as HTMLInputElement;
       const rangeLabel = document.getElementById('rkn-color-picker__alpha-value') as HTMLInputElement;
 
@@ -70,6 +81,8 @@ export const setupColorPicker = async (element: HTMLElement | null) => {
       rangeInput?.addEventListener('input', (e: Event) => syncAlphaRangeWithLabel(e as HTMLElementEvent, rangeLabel), false);
       // propagate click on dummy/styled color picker to actual color input DOM element
       colorPickerInputLabel?.addEventListener('click', () => colorPickerInput?.click(), false);
+      // save current color to palette
+      colorPickerSaveButton.addEventListener('click', () => addColorToPalette(), false);
     });
   } else {
     throw new Error('No element for colorPicker available!');

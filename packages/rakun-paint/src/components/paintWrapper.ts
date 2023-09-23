@@ -1,3 +1,4 @@
+import { toggleSidebarElement } from "@/helpers/events";
 import { setupColorPicker } from "./colorPicker";
 
 export const setupPaintWrapper = async (element: HTMLElement | null) => {
@@ -25,9 +26,22 @@ export const setupPaintWrapper = async (element: HTMLElement | null) => {
           <div class="rkn-paint__sidebar-element-wrapper">
             <p class="rkn-paint__sidebar-element-title">Tools</p>
             <div class="rkn-paint__sidebar-element-content">
-              <button id="rkn-paint__pencil" class="rkn-paint__tools-button">Pencil</div>
-              <button id="rkn-paint__eraser" class="rkn-paint__tools-button">Eraser</div>
-              <button id="rkn-paint__color-inspector" class="rkn-paint__tools-button">Color Inspector</div>
+              <button id="rkn-paint__pencil" class="rkn-paint__tools-button">Pencil</button>
+              <button id="rkn-paint__eraser" class="rkn-paint__tools-button">Eraser</button>
+              <button id="rkn-paint__color-inspector" class="rkn-paint__tools-button">Color Inspector</button>
+            </div>
+          </div>
+          <div class="rkn-paint__sidebar-element-wrapper">
+            <p class="rkn-paint__sidebar-element-title">Settings</p>
+            <div class="rkn-paint__sidebar-element-content">
+              <div>
+                <label for="rkn-paint__settings-width">Frame width: </label>
+                <input type="number" value="32" id="rkn-paint__settings-width" name="rkn-paint__settings-width" />
+              </div>
+              <div>
+                <label for="rkn-paint__settings-height">Frame height: </label>
+                <input type="number" value="32" id="rkn-paint__settings-height" name="rkn-paint__settings-height" />
+              </div>
             </div>
           </div>
         </div>
@@ -36,6 +50,8 @@ export const setupPaintWrapper = async (element: HTMLElement | null) => {
 
     await setTimeout(async () => {
       await setupColorPicker(document.getElementById('rkn-paint__color-picker'));
+      document.querySelectorAll('.rkn-paint__sidebar-element-title').forEach((element) => element.addEventListener('dblclick', () => toggleSidebarElement(element as HTMLElement), false));
+      // document.querySelectorAll('.rkn-paint__tools-button').forEach((element) => element.addEventListener('click', () => toggleButtonActive(element as HTMLButtonElement), false));
     }, 0);
   } else {
     throw new Error('No wrapper element for paintWrapper available!');
