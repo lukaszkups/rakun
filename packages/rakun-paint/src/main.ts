@@ -1,4 +1,4 @@
-import '@/styles/style.scss'
-import { setupPaintWrapper } from '@/components/paintWrapper.ts'
+import { createApp } from 'vue'
+import App from './App.vue'
 
-setupPaintWrapper(document.getElementById('app'));
+createApp(App).mount('#app')
