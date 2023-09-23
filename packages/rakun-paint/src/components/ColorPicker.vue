@@ -1,15 +1,38 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { propagateClick } from '@/helpers/helpers';
+import store from '@/store/store';
 
-const data = reactive({
-  colorHex: '#000000',
-  alpha100: 100,
+// const data = reactive({
+//   colorHex: '#000000',
+//   alpha100: 100,
+// });
+
+const colorHex = computed({
+  get() {
+    return store.state.selectedColor;
+  },
+  set(newValue) {
+    store.dispatch('updateProp', { name: 'selectedColor', value: newValue });
+  }
+});
+
+const alpha100 = computed({
+  get() {
+    return Number(store.state.selectedOpacity);
+  },
+  set(newValue) {
+    store.dispatch('updateProp', { name: 'selectedOpacity', value: newValue });
+  }
 });
 
 const computedColorPickerLabelStyle = computed(() => {
-  return `opacity: ${Number(data.alpha100/100)}; background-color: ${data.colorHex};`;
+  return `opacity: ${Number(alpha100.value/100)}; background-color: ${colorHex.value};`;
 });
+
+const saveColorToPalette = () => {
+
+}
 </script>
 
 <template>
@@ -18,7 +41,7 @@ const computedColorPickerLabelStyle = computed(() => {
     id="rkn-color-picker-input" 
     class="rkn-color-picker-input" 
     type="color"
-    v-model="data.colorHex"
+    v-model="colorHex"
   />
   <div 
     class="rkn-color-picker-input-label"
@@ -29,20 +52,23 @@ const computedColorPickerLabelStyle = computed(() => {
       :style="computedColorPickerLabelStyle"
     ></div>
   </div>
-  <input type="text" v-model="data.colorHex" />
+  <input type="text" v-model="colorHex" />
 </div>
 <div class="rkn-color-picker__alpha-wrapper">
   <input 
     name="color-picker-alpha" 
     class="rkn-color-picker__alpha" 
-    v-model="data.alpha100"
+    v-model="alpha100"
     type="range" 
     min="0" 
     max="100" 
   />
-  <label for="color-picker-alpha">{{ data.alpha100 }}</label>
+  <label for="color-picker-alpha">{{ alpha100 }}</label>
 </div>
-<button id="rkn-color-picker__save-button" class="rkn-paint__tools-button rkn-paint__tools-button--save-color">Add to palette</button>
+<button 
+  class="rkn-paint__tools-button rkn-paint__tools-button--save-color"
+  @click="saveColorToPalette"
+>Add to palette</button>
 </template>
 
 <style scoped lang="scss">

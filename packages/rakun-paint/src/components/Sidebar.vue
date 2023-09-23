@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SidebarSection from './SidebarSection.vue';
 import ColorPicker from './ColorPicker.vue';
+import ColorPalette from './ColorPalette.vue';
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import ColorPicker from './ColorPicker.vue';
   </sidebar-section>
   <sidebar-section heading="Colors">
     <color-picker />
+    <color-palette />
   </sidebar-section>
 </div>
 </template>

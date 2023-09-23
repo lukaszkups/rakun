@@ -1,4 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import RakunPaintStore from './store/store';
 
-createApp(App).mount('#app')
+const app = createApp(App);
+
+app.use(RakunPaintStore)
+
+app.mount('#app');
