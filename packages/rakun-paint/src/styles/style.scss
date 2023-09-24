@@ -1,14 +1,26 @@
+$primary-color: #004080;
+$secondary-color: #0698e6;
+$gray-color: #ddd;
+
 @mixin unselectable {
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
-
-  /*
-    Introduced in Internet Explorer 10.
-    See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-  */
   -ms-user-select: none;
   user-select: none;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/OpenSans-Regular.ttf');
+}
+
+body {
+  margin: 0;
+  padding: 0;
 }
 
 .rkn-flex {
@@ -23,7 +35,7 @@ input[type="text"],
 input[type="number"] {
   all: unset;
   border: 1px solid black;
-  padding: 5px;
+  padding: 4px;
   box-sizing: border-box;
 
   &:hover {

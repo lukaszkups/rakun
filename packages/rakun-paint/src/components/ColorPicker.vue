@@ -31,10 +31,9 @@ const computedColorPickerLabelStyle = computed(() => {
 });
 
 const saveColorToPalette = () => {
-
+  store.dispatch('saveColorToPalette', { hex: colorHex.value, alpha: alpha100.value });
 }
 </script>
-
 <template>
 <div class="rkn-flex">
   <input 
@@ -70,7 +69,6 @@ const saveColorToPalette = () => {
   @click="saveColorToPalette"
 >Add to palette</button>
 </template>
-
 <style scoped lang="scss">
 @import './../styles/style.scss';
 

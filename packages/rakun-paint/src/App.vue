@@ -11,9 +11,21 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <canvas-wrapper />
-  <sidebar />
+  <div class="rkn-paint__wrapper">
+    <canvas-wrapper />
+    <sidebar />
+  </div>
 </template>
 
 <style lang="scss" scoped>
+@import './styles/style.scss';
+
+.rkn-paint__wrapper {
+  font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+
+  canvas-wrapper {
+    flex: 5;
+  }
+}
 </style>

@@ -17,4 +17,13 @@ import ColorPalette from './ColorPalette.vue';
 </template>
 
 <style scoped lang="scss">
+@import './../styles/style.scss';
+
+.rkn-sidebar {
+  border-left: 1px solid $gray-color;
+  height: 100vh;
+  padding-left: 5px;
+  flex: 1;
+  flex-grow: 0;
+}
 </style>

@@ -43,9 +43,18 @@ const toggleCollapsed = () => {
     @include unselectable;
 
     cursor: pointer;
+    background: $primary-color;
+    color: #fff;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 5px;
   }
   &-wrapper {
     &--collapsed {
+      .rkn-sidebar__section-heading {
+        background-color: $secondary-color;
+      }
+      
       .rkn-sidebar__section-content {
         height: 0;
         overflow: hidden;
