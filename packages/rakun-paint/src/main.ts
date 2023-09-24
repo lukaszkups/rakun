@@ -1,4 +1,10 @@
-import '@/styles/style.scss'
-import { setupPaintWrapper } from '@/components/paintWrapper.ts'
+import '@/styles/style.scss';
+import { createApp } from 'vue'
+import App from './App.vue'
+import RakunPaintStore from './store/store';
 
-setupPaintWrapper(document.getElementById('app'));
+const app = createApp(App);
+
+app.use(RakunPaintStore)
+
+app.mount('#app');
