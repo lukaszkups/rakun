@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue';
+import { computed } from 'vue';
 import { propagateClick } from '@/helpers/helpers';
 import store from '@/store/store';
-
-// const data = reactive({
-//   colorHex: '#000000',
-//   alpha100: 100,
-// });
 
 const colorHex = computed({
   get() {

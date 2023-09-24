@@ -2,6 +2,7 @@
 import SidebarSection from './SidebarSection.vue';
 import ColorPicker from './ColorPicker.vue';
 import ColorPalette from './ColorPalette.vue';
+import ProjectSettingsSection from './ProjectSettingsSection.vue';
 </script>
 
 <template>
@@ -12,6 +13,9 @@ import ColorPalette from './ColorPalette.vue';
   <sidebar-section heading="Colors">
     <color-picker />
     <color-palette />
+  </sidebar-section>
+  <sidebar-section heading="Settings">
+    <project-settings-section />
   </sidebar-section>
 </div>
 </template>

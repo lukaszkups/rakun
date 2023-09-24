@@ -56,3 +56,34 @@ button {
     cursor: pointer;
   }
 }
+
+.rkn-input-label {
+  font-size: 0.75em;
+  margin-right: 5px;
+  display: inline-block;
+  padding-top: 5px;
+}
+
+.rkn-input,
+input.rkn-input {
+  font-size: 0.75em;
+  display: inline-block;
+}
+
+.rkn-form {
+  .rkn-field {
+    display: flex;
+    clear: both;
+    margin-bottom: 5px;
+    padding: 0;
+
+    .rkn-input-label {
+      flex: 1;
+    }
+
+    .rkn-input {
+      flex: 3;
+      margin-right: 5px;
+    }
+  }
+}
