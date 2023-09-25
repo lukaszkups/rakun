@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
+import CanvasWrapper from './components/CanvasWrapper.vue';
 import Sidebar from './components/Sidebar.vue';
 import { useStore } from 'vuex';
 

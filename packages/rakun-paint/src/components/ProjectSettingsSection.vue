@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+
 const store = useStore();
 
 const canvasWidth = computed({
   get() {
     return store.state.canvasWidth;
   },
-  set(newVal) {
+  set(newVal: number) {
     store.dispatch('updateProp', { name: 'canvasWidth', value: newVal });
   }
 });
@@ -16,7 +17,7 @@ const canvasHeight = computed({
   get() {
     return store.state.canvasHeight;
   },
-  set(newVal) {
+  set(newVal: number) {
     store.dispatch('updateProp', { name: 'canvasHeight', value: newVal });
   }
 });
@@ -25,7 +26,7 @@ const fps = computed({
   get() {
     return store.state.fps;
   },
-  set(newVal) {
+  set(newVal: number) {
     store.dispatch('updateProp', { name: 'fps', value: newVal });
   }
 });
