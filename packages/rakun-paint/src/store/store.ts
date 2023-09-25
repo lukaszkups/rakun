@@ -14,6 +14,7 @@ const store = createStore({
       selectedOpacity: 100,
       canvasWidth: 32,
       canvasHeight: 32,
+      fps: 60,
     }
   },
   mutations: {

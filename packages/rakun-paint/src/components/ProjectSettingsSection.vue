@@ -20,6 +20,15 @@ const canvasHeight = computed({
     store.dispatch('updateProp', { name: 'canvasHeight', value: newVal });
   }
 });
+
+const fps = computed({
+  get() {
+    return store.state.fps;
+  },
+  set(newVal) {
+    store.dispatch('updateProp', { name: 'fps', value: newVal });
+  }
+});
 </script>
 <template>
 <div class="rkn-project-settings rkn-form">
@@ -39,6 +48,15 @@ const canvasHeight = computed({
       class="rkn-input"
       type="number" 
       v-model="canvasHeight" 
+    />
+  </div>
+  <div class="rkn-field">
+    <label class="rkn-input-label" for="fps">FPS:</label>
+    <input 
+      name="fps" 
+      class="rkn-input"
+      type="number" 
+      v-model="fps" 
     />
   </div>
 </div>
