@@ -15,7 +15,7 @@ const store = createStore({
       canvasWidth: 32,
       canvasHeight: 32,
       fps: 60,
-      zoom: 10,
+      zoom: 20,
     }
   },
   mutations: {

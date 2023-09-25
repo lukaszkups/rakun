@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA } from '@/helpers/canvas';
+import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition } from '@/helpers/canvas';
 
 const store = useStore();
 
@@ -14,34 +14,46 @@ const selectedOpacity = computed(() => store.state.selectedOpacity);
 const canvasHoverRef = ref(null);
 const canvasImageRef = ref(null);
 const canvasWholeImageRef = ref(null);
+const canvasGridRef = ref(null);
 
 let canvasHoverCtx: CanvasRenderingContext2D | null = null;
+let canvasGridCtx: CanvasRenderingContext2D | null = null;
 
 const highlightCurrentDrawingCell = (e: Event) => {
-  const pos = calculateRealMousePosition(e, canvasHoverRef._value);
+  canvasHoverCtx?.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+  const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
   const colorToDraw = convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value);
-  drawSquareOnCanvas(canvasHoverCtx, pos.x, pos.y, zoom.value, colorToDraw);
+  drawSquareOnCanvas(canvasHoverCtx, calculateGridPosition(pos.x, zoom.value), calculateGridPosition(pos.y, zoom.value), zoom.value, colorToDraw);
 }
 
 onMounted(() => {
-  canvasHoverCtx = canvasHoverRef._value.getContext("2d");
+  canvasHoverCtx = (canvasHoverRef as any)._value.getContext('2d');
+  canvasGridCtx = (canvasGridRef as any)._value.getContext('2d');
+  drawGrid(canvasGridCtx, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
 })
 </script>
 
 <template>
 <div class="rkn-canvas-wrapper">
   <canvas 
-    id="rkn-canvas-helper__hover"
-    ref="canvasHoverRef"
-    class="rkn-drawing-canvas"
+    id="rkn-canvas-helper__grid" 
+    ref="canvasGridRef" 
+    class="rkn-drawing-canvas rkn-drawing-canvas--z-index-4"
     :width="canvasWidth"
     :height="canvasHeight"
     @mousemove="highlightCurrentDrawingCell"
   ></canvas>
   <canvas 
+    id="rkn-canvas-helper__hover"
+    ref="canvasHoverRef"
+    class="rkn-drawing-canvas rkn-drawing-canvas--z-index-3"
+    :width="canvasWidth"
+    :height="canvasHeight"
+  ></canvas>
+  <canvas 
     id="rkn-canvas-helper__current-image" 
     ref="canvasImageRef" 
-    class="rkn-drawing-canvas"
+    class="rkn-drawing-canvas rkn-drawing-canvas--z-index-2"
     :width="canvasWidth"
     :height="canvasHeight"
   ></canvas>
@@ -58,7 +70,20 @@ onMounted(() => {
   flex: 5;
 
   .rkn-drawing-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
     margin: 25px;
+
+    &--z-index-4 {
+      z-index: 4;
+    }
+    &--z-index-3 {
+      z-index: 3;
+    }
+    &--z-index-2 {
+      z-index: 2;
+    }
   }
 }
 </style>
