@@ -18,23 +18,32 @@ const canvasGridRef = ref(null);
 
 let canvasHoverCtx: CanvasRenderingContext2D | null = null;
 let canvasGridCtx: CanvasRenderingContext2D | null = null;
+let canvasImageCtx: CanvasRenderingContext2D | null = null;
+const mouseDown = ref(false);
 
 const highlightCurrentDrawingCell = (e: Event) => {
   canvasHoverCtx?.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
   const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
   const colorToDraw = convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value);
-  drawSquareOnCanvas(canvasHoverCtx, calculateGridPosition(pos.x, zoom.value), calculateGridPosition(pos.y, zoom.value), zoom.value, colorToDraw);
+  const gridX = calculateGridPosition(pos.x, zoom.value);
+  const gridY = calculateGridPosition(pos.y, zoom.value);
+  drawSquareOnCanvas(canvasHoverCtx, gridX, gridY, zoom.value, colorToDraw);
+  if (mouseDown.value) {
+    drawSquareOnCanvas(canvasImageCtx, gridX, gridY, zoom.value, colorToDraw);
+  }
 }
 
 onMounted(() => {
   canvasHoverCtx = (canvasHoverRef as any)._value.getContext('2d');
   canvasGridCtx = (canvasGridRef as any)._value.getContext('2d');
+  canvasImageCtx = (canvasImageRef as any)._value.getContext('2d');
   drawGrid(canvasGridCtx, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
 })
 </script>
 
 <template>
 <div class="rkn-canvas-wrapper">
+  {{ mouseDown }}
   <canvas 
     id="rkn-canvas-helper__grid" 
     ref="canvasGridRef" 
@@ -42,6 +51,8 @@ onMounted(() => {
     :width="canvasWidth"
     :height="canvasHeight"
     @mousemove="highlightCurrentDrawingCell"
+    @mousedown="mouseDown = true"
+    @mouseup="mouseDown = false"
   ></canvas>
   <canvas 
     id="rkn-canvas-helper__hover"
