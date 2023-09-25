@@ -7,7 +7,7 @@ const colorHex = computed({
   get() {
     return store.state.selectedColor;
   },
-  set(newValue) {
+  set(newValue: string) {
     store.dispatch('updateProp', { name: 'selectedColor', value: newValue });
   }
 });
@@ -16,7 +16,7 @@ const alpha100 = computed({
   get() {
     return Number(store.state.selectedOpacity);
   },
-  set(newValue) {
+  set(newValue: number) {
     store.dispatch('updateProp', { name: 'selectedOpacity', value: newValue });
   }
 });
