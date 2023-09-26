@@ -1,35 +1,26 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 
-const canvasWidth = computed({
-  get() {
-    return store.state.canvasWidth;
-  },
-  set(newVal: number) {
-    store.dispatch('updateProp', { name: 'canvasWidth', value: newVal });
-  }
-});
+const localCanvasWidth = ref(store.state.canvasWidth);
+const localCanvasHeight = ref(store.state.canvasHeight);
+const localFps = ref(store.state.fps);
 
-const canvasHeight = computed({
-  get() {
-    return store.state.canvasHeight;
-  },
-  set(newVal: number) {
-    store.dispatch('updateProp', { name: 'canvasHeight', value: newVal });
-  }
-});
+const saveSettings = () => {
+  const canvasWidth = store.state.canvasWidth * store.state.zoom;
+  const canvasHeight = store.state.canvasHeight * store.state.zoom;
+  // save current canvas contents
+  const imgData = store.state.canvasImageCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+  
+  store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth });
+  store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight });
+  store.dispatch('updateProp', { name: 'fps', value: localFps });
 
-const fps = computed({
-  get() {
-    return store.state.fps;
-  },
-  set(newVal: number) {
-    store.dispatch('updateProp', { name: 'fps', value: newVal });
-  }
-});
+  // restore canvas contents
+  store.state.canvasImageCtx.putImageData(imgData, canvasWidth, canvasHeight);
+}
 </script>
 <template>
 <div class="rkn-project-settings rkn-form">
@@ -39,7 +30,7 @@ const fps = computed({
       name="canvasWidth" 
       class="rkn-input"
       type="number" 
-      v-model="canvasWidth" 
+      v-model="localCanvasWidth" 
     />
   </div>
   <div class="rkn-field">
@@ -48,7 +39,7 @@ const fps = computed({
       name="canvasHeight" 
       class="rkn-input"
       type="number" 
-      v-model="canvasHeight" 
+      v-model="localCanvasHeight" 
     />
   </div>
   <div class="rkn-field">
@@ -57,9 +48,13 @@ const fps = computed({
       name="fps" 
       class="rkn-input"
       type="number" 
-      v-model="fps" 
+      v-model="localFps" 
     />
   </div>
+  <button 
+    class="rkn-button"
+    @click="saveSettings"
+  >Save</button>
 </div>
 </template>
 

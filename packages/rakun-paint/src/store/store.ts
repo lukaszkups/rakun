@@ -16,6 +16,9 @@ const store = createStore({
       canvasHeight: 32,
       fps: 60,
       zoom: 20,
+      canvasHoverCtx: null,
+      canvasGridCtx: null,
+      canvasImageCtx: null,
     }
   },
   mutations: {

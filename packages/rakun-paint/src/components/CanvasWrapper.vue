@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
@@ -7,33 +7,73 @@ import { wasPixelMarked } from '@/helpers/helpers';
 const store = useStore();
 
 const zoom = computed(() => store.state.zoom);
-const canvasWidth = computed(() => store.state.canvasWidth * zoom.value);
-const canvasHeight = computed(() => store.state.canvasHeight * zoom.value);
+const canvasWidth = computed(() => {
+  if (canvasGridCtx && canvasGridCtx.value) {
+    console.log(1, canvasGridCtx.value);
+    drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
+  }
+  return store.state.canvasWidth * zoom.value
+});
+const canvasHeight = computed(() => {
+  if (canvasGridCtx && canvasGridCtx.value && canvasGridCtx.value.stroke) {
+    console.log(2, canvasGridCtx.value);
+    drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
+  }
+  return store.state.canvasHeight * zoom.value
+});
 const selectedColor = computed(() => store.state.selectedColor);
 const selectedOpacity = computed(() => store.state.selectedOpacity);
 
 const canvasHoverRef = ref(null);
+const canvasGridRef = ref(null);
 const canvasImageRef = ref(null);
 const canvasWholeImageRef = ref(null);
-const canvasGridRef = ref(null);
 
-let canvasHoverCtx: CanvasRenderingContext2D | null = null;
-let canvasGridCtx: CanvasRenderingContext2D | null = null;
-let canvasImageCtx: CanvasRenderingContext2D | null = null;
+// let canvasHoverCtx: CanvasRenderingContext2D | null = null;
+// let canvasGridCtx: CanvasRenderingContext2D | null = null;
+// let canvasImageCtx: CanvasRenderingContext2D | null = null;
+
+const canvasHoverCtx = computed({
+  get() {
+    return store.state.canvasHoverCtx;
+  },
+  set(newVal) {
+    store.dispatch('updateProp', { name: 'canvasHoverCtx', value: newVal });
+  }
+});
+
+
+const canvasGridCtx = computed({
+  get() {
+    return store.state.canvasGridCtx;
+  },
+  set(newVal) {
+    store.dispatch('updateProp', { name: 'canvasGridCtx', value: newVal });
+  }
+});
+
+const canvasImageCtx = computed({
+  get() {
+    return store.state.canvasImageCtx;
+  },
+  set(newVal) {
+    store.dispatch('updateProp', { name: 'canvasImageCtx', value: newVal });
+  }
+});
+
 const mouseDown = ref(false);
 let markedPixels: Array<[number, number]> = [];
 
 const highlightCurrentDrawingCell = (e: Event) => {
-  canvasHoverCtx?.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+  canvasHoverCtx?.value?.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
   const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
   const colorToDraw = convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value);
   const gridX = calculateGridPosition(pos.x, zoom.value);
   const gridY = calculateGridPosition(pos.y, zoom.value);
-  drawSquareOnCanvas(canvasHoverCtx, gridX, gridY, zoom.value, colorToDraw);
+  drawSquareOnCanvas(canvasHoverCtx.value, gridX, gridY, zoom.value, colorToDraw);
   if (mouseDown.value) {
-    console.log(markedPixels);
     if (!wasPixelMarked(markedPixels, gridX, gridY)) {
-      drawSquareOnCanvas(canvasImageCtx, gridX, gridY, zoom.value, colorToDraw);
+      drawSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value, colorToDraw);
     }
   }
 }
@@ -44,16 +84,16 @@ const onMouseUp = () => {
 } 
 
 onMounted(() => {
-  canvasHoverCtx = (canvasHoverRef as any)._value.getContext('2d');
-  canvasGridCtx = (canvasGridRef as any)._value.getContext('2d');
-  canvasImageCtx = (canvasImageRef as any)._value.getContext('2d');
-  drawGrid(canvasGridCtx, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
-})
+  canvasHoverCtx.value = (canvasHoverRef as any)._value.getContext('2d');
+  canvasGridCtx.value = (canvasGridRef as any)._value.getContext('2d');
+  canvasImageCtx.value = (canvasImageRef as any)._value.getContext('2d');
+
+  drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
+});
 </script>
 
 <template>
 <div class="rkn-canvas-wrapper">
-  {{ mouseDown }}
   <canvas 
     id="rkn-canvas-helper__grid" 
     ref="canvasGridRef" 
@@ -75,6 +115,13 @@ onMounted(() => {
     id="rkn-canvas-helper__current-image" 
     ref="canvasImageRef" 
     class="rkn-drawing-canvas rkn-drawing-canvas--z-index-2"
+    :width="canvasWidth"
+    :height="canvasHeight"
+  ></canvas>
+  <canvas 
+    id="rkn-canvas-helper__current-image" 
+    ref="canvasHelperImageRef" 
+    class="rkn-hidden"
     :width="canvasWidth"
     :height="canvasHeight"
   ></canvas>
