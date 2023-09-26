@@ -2,6 +2,7 @@
 import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition } from '@/helpers/canvas';
+import { wasPixelMarked } from '@/helpers/helpers';
 
 const store = useStore();
 
@@ -20,6 +21,7 @@ let canvasHoverCtx: CanvasRenderingContext2D | null = null;
 let canvasGridCtx: CanvasRenderingContext2D | null = null;
 let canvasImageCtx: CanvasRenderingContext2D | null = null;
 const mouseDown = ref(false);
+let markedPixels: Array<[number, number]> = [];
 
 const highlightCurrentDrawingCell = (e: Event) => {
   canvasHoverCtx?.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
@@ -29,9 +31,17 @@ const highlightCurrentDrawingCell = (e: Event) => {
   const gridY = calculateGridPosition(pos.y, zoom.value);
   drawSquareOnCanvas(canvasHoverCtx, gridX, gridY, zoom.value, colorToDraw);
   if (mouseDown.value) {
-    drawSquareOnCanvas(canvasImageCtx, gridX, gridY, zoom.value, colorToDraw);
+    console.log(markedPixels);
+    if (!wasPixelMarked(markedPixels, gridX, gridY)) {
+      drawSquareOnCanvas(canvasImageCtx, gridX, gridY, zoom.value, colorToDraw);
+    }
   }
 }
+
+const onMouseUp = () => {
+  mouseDown.value = false; 
+  markedPixels = [];
+} 
 
 onMounted(() => {
   canvasHoverCtx = (canvasHoverRef as any)._value.getContext('2d');
@@ -52,7 +62,7 @@ onMounted(() => {
     :height="canvasHeight"
     @mousemove="highlightCurrentDrawingCell"
     @mousedown="mouseDown = true"
-    @mouseup="mouseDown = false"
+    @mouseup="onMouseUp"
   ></canvas>
   <canvas 
     id="rkn-canvas-helper__hover"
