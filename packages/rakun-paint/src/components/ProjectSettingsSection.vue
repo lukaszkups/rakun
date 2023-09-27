@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { drawGrid, clearCanvas } from '@/helpers/canvas';
+import { drawGrid, clearCanvas, getCanvasImage, loadImageToCanvas } from '@/helpers/canvas';
 
 const store = useStore();
 
@@ -15,12 +15,9 @@ const saveSettings = async () => {
 
   const cw = canvasWidth;
   const ch = canvasHeight;
-  console.log(123, cw, ch)
 
   // save current canvas contents
-  const imgData = store.state.canvasImageCtx.getImageData(0, 0, cw, ch);
-  
-  console.warn('imgData', imgData);
+  const imgData = await getCanvasImage(store.state.canvasImageCtx, cw, ch);
   // populate new project settings
   store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth.value });
   store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight.value });
@@ -29,15 +26,13 @@ const saveSettings = async () => {
   // update canvas size
   canvasWidth = store.state.canvasWidth * store.state.zoom;
   canvasHeight = store.state.canvasHeight * store.state.zoom;
-  console.warn('imgData', imgData);
 
   // restore canvas contents
-  store.state.canvasImageCtx.putImageData(imgData, 0, 0);
+  await loadImageToCanvas(store.state.canvasImageCtx, imgData);
 
   // redraw grid
-  clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
-  await nextTick();
-  drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
+  await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
+  await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
 }
 </script>
 <template>

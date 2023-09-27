@@ -1,3 +1,5 @@
+import { nextTick } from "vue";
+
 export const calculateRealMousePosition = (e: MouseEvent, element: HTMLElement | HTMLCanvasElement) => {
   return {
     x: e.clientX - element.offsetLeft,
@@ -18,8 +20,9 @@ export const convertHexWithOpacityToRGBA = (hex: string, opacity: number) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`
 }
 
-export const drawGrid = (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number, gridColor: string, gridSize: number) => {
-  console.log('drawGrid');
+export const drawGrid = async (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number, gridColor: string, gridSize: number) => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
   canvasContext.moveTo(0, 0);
   for (var x = 0; x <= canvasWidth; x += gridSize) {
     canvasContext.moveTo(x, 0);
@@ -37,12 +40,24 @@ export const calculateGridPosition = (pos: number, gridSize: number) => {
   return Math.floor(pos / gridSize) * gridSize;
 }
 
-export const clearCanvas = (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
-  console.log('clearCanvas');
+export const clearCanvas = async (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
   canvasContext.clearRect(0 ,0, canvasWidth, canvasHeight);
 }
 
 export const ensureCanvasResized = (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
   console.log('ensureCanvasResized', canvasContext, canvasWidth, canvasHeight);
+}
 
+export const getCanvasImage = async (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number): Promise<ImageData> => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
+  return canvasContext.getImageData(0, 0, canvasWidth, canvasHeight);
+}
+
+export const loadImageToCanvas = async (canvasContext: CanvasRenderingContext2D, imgData: ImageData) => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
+  canvasContext.putImageData(imgData, 0, 0);
 }
