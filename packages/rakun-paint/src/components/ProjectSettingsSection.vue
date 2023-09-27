@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import { useStore } from 'vuex';
+import { drawGrid, clearCanvas } from '@/helpers/canvas';
 
 const store = useStore();
 
@@ -8,18 +9,35 @@ const localCanvasWidth = ref(store.state.canvasWidth);
 const localCanvasHeight = ref(store.state.canvasHeight);
 const localFps = ref(store.state.fps);
 
-const saveSettings = () => {
-  const canvasWidth = store.state.canvasWidth * store.state.zoom;
-  const canvasHeight = store.state.canvasHeight * store.state.zoom;
+const saveSettings = async () => {
+  let canvasWidth = store.state.canvasWidth * store.state.zoom;
+  let canvasHeight = store.state.canvasHeight * store.state.zoom;
+
+  const cw = canvasWidth;
+  const ch = canvasHeight;
+  console.log(123, cw, ch)
+
   // save current canvas contents
-  const imgData = store.state.canvasImageCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+  const imgData = store.state.canvasImageCtx.getImageData(0, 0, cw, ch);
   
-  store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth });
-  store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight });
+  console.warn('imgData', imgData);
+  // populate new project settings
+  store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth.value });
+  store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight.value });
   store.dispatch('updateProp', { name: 'fps', value: localFps });
 
+  // update canvas size
+  canvasWidth = store.state.canvasWidth * store.state.zoom;
+  canvasHeight = store.state.canvasHeight * store.state.zoom;
+  console.warn('imgData', imgData);
+
   // restore canvas contents
-  store.state.canvasImageCtx.putImageData(imgData, canvasWidth, canvasHeight);
+  store.state.canvasImageCtx.putImageData(imgData, 0, 0);
+
+  // redraw grid
+  clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
+  await nextTick();
+  drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
 }
 </script>
 <template>

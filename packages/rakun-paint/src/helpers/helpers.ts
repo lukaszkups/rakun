@@ -1,3 +1,5 @@
+import { getCurrentInstance } from 'vue';
+
 export const propagateClick = (selector: string) => {
   (document.querySelector(selector) as HTMLButtonElement)?.click();
 }
@@ -10,4 +12,9 @@ export const wasPixelMarked = (arrOfPixels: Array<[number, number]>, x: number, 
     arrOfPixels.push([x, y]);
     return false;
   }
+}
+
+export const vueForceUpdate = () => {
+  const instance = getCurrentInstance();
+  instance?.proxy?.$forceUpdate();
 }

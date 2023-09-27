@@ -3,22 +3,15 @@ import { computed, ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
+import { clearCanvas } from '@/helpers/canvas';
 
 const store = useStore();
 
 const zoom = computed(() => store.state.zoom);
 const canvasWidth = computed(() => {
-  if (canvasGridCtx && canvasGridCtx.value) {
-    console.log(1, canvasGridCtx.value);
-    drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
-  }
   return store.state.canvasWidth * zoom.value
 });
 const canvasHeight = computed(() => {
-  if (canvasGridCtx && canvasGridCtx.value && canvasGridCtx.value.stroke) {
-    console.log(2, canvasGridCtx.value);
-    drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
-  }
   return store.state.canvasHeight * zoom.value
 });
 const selectedColor = computed(() => store.state.selectedColor);
@@ -28,10 +21,6 @@ const canvasHoverRef = ref(null);
 const canvasGridRef = ref(null);
 const canvasImageRef = ref(null);
 const canvasWholeImageRef = ref(null);
-
-// let canvasHoverCtx: CanvasRenderingContext2D | null = null;
-// let canvasGridCtx: CanvasRenderingContext2D | null = null;
-// let canvasImageCtx: CanvasRenderingContext2D | null = null;
 
 const canvasHoverCtx = computed({
   get() {
@@ -65,7 +54,7 @@ const mouseDown = ref(false);
 let markedPixels: Array<[number, number]> = [];
 
 const highlightCurrentDrawingCell = (e: Event) => {
-  canvasHoverCtx?.value?.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+  clearCanvas(canvasHoverCtx.value, canvasWidth.value, canvasHeight.value)
   const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
   const colorToDraw = convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value);
   const gridX = calculateGridPosition(pos.x, zoom.value);

@@ -19,6 +19,8 @@ export const convertHexWithOpacityToRGBA = (hex: string, opacity: number) => {
 }
 
 export const drawGrid = (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number, gridColor: string, gridSize: number) => {
+  console.log('drawGrid');
+  canvasContext.moveTo(0, 0);
   for (var x = 0; x <= canvasWidth; x += gridSize) {
     canvasContext.moveTo(x, 0);
     canvasContext.lineTo(x, canvasHeight);
@@ -33,4 +35,14 @@ export const drawGrid = (canvasContext: CanvasRenderingContext2D, canvasWidth: n
 
 export const calculateGridPosition = (pos: number, gridSize: number) => {
   return Math.floor(pos / gridSize) * gridSize;
+}
+
+export const clearCanvas = (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
+  console.log('clearCanvas');
+  canvasContext.clearRect(0 ,0, canvasWidth, canvasHeight);
+}
+
+export const ensureCanvasResized = (canvasContext: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) => {
+  console.log('ensureCanvasResized', canvasContext, canvasWidth, canvasHeight);
+
 }
