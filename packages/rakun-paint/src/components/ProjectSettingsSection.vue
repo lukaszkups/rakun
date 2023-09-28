@@ -10,29 +10,38 @@ const localCanvasHeight = ref(store.state.canvasHeight);
 const localFps = ref(store.state.fps);
 
 const saveSettings = async () => {
-  let canvasWidth = store.state.canvasWidth * store.state.zoom;
-  let canvasHeight = store.state.canvasHeight * store.state.zoom;
+  // check if save is needed to avoid unnecessary store action dispatches & canvas redrawing
+  if (localCanvasWidth.value !== store.state.canvasWidth || localCanvasHeight.value !== store.state.canvasHeight) {
+    let canvasWidth = store.state.canvasWidth * store.state.zoom;
+    let canvasHeight = store.state.canvasHeight * store.state.zoom;
+  
+    const cw = canvasWidth;
+    const ch = canvasHeight;
+  
+    // save current canvas contents
+    const imgData = await getCanvasImage(store.state.canvasImageCtx, cw, ch);
+    // populate new project settings
+    store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth.value });
+    store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight.value });
+  
+    // update canvas size
+    canvasWidth = store.state.canvasWidth * store.state.zoom;
+    canvasHeight = store.state.canvasHeight * store.state.zoom;
+  
+    // make sure canvas is clear
+    await clearCanvas(store.state.canvasImageCtx, canvasWidth, canvasHeight);
+    // restore canvas contents
+    await loadImageToCanvas(store.state.canvasImageCtx, imgData);
+  
+    // redraw grid canvas
+    await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
+    await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
+  }
+  // check if save is needed to avoid unnecessary store action dispatches
+  if (localFps.value !== store.state.fps) {
+    store.dispatch('updateProp', { name: 'fps', value: localFps.value });
+  }
 
-  const cw = canvasWidth;
-  const ch = canvasHeight;
-
-  // save current canvas contents
-  const imgData = await getCanvasImage(store.state.canvasImageCtx, cw, ch);
-  // populate new project settings
-  store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth.value });
-  store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight.value });
-  store.dispatch('updateProp', { name: 'fps', value: localFps });
-
-  // update canvas size
-  canvasWidth = store.state.canvasWidth * store.state.zoom;
-  canvasHeight = store.state.canvasHeight * store.state.zoom;
-
-  // restore canvas contents
-  await loadImageToCanvas(store.state.canvasImageCtx, imgData);
-
-  // redraw grid
-  await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
-  await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
 }
 </script>
 <template>

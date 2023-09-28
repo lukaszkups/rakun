@@ -53,8 +53,8 @@ const canvasImageCtx = computed({
 const mouseDown = ref(false);
 let markedPixels: Array<[number, number]> = [];
 
-const highlightCurrentDrawingCell = (e: Event) => {
-  clearCanvas(canvasHoverCtx.value, canvasWidth.value, canvasHeight.value)
+const highlightCurrentDrawingCell = async (e: Event) => {
+  await clearCanvas(canvasHoverCtx.value, canvasWidth.value, canvasHeight.value)
   const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
   const colorToDraw = convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value);
   const gridX = calculateGridPosition(pos.x, zoom.value);
