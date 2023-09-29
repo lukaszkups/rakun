@@ -125,6 +125,8 @@ onMounted(() => {
 <style scoped lang="scss">
 .rkn-canvas-wrapper {
   flex: 5;
+  overflow: auto;
+  position: relative;
 
   .rkn-drawing-canvas {
     position: absolute;
