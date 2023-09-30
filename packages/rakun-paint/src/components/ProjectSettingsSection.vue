@@ -22,7 +22,7 @@ const saveSettings = async () => {
   
     // save current canvas contents
     const imgData = await getCanvasImage(store.state.canvasImageCtx, cw, ch);
-    const canvasClone = cloneCanvasElement(store.state.canvasImageCtx.canvas);
+    const canvasClone =  await cloneCanvasElement(store.state.canvasImageCtx.canvas);
     // populate new project settings
     store.dispatch('updateProp', { name: 'canvasWidth', value: localCanvasWidth.value });
     store.dispatch('updateProp', { name: 'canvasHeight', value: localCanvasHeight.value });
@@ -96,7 +96,7 @@ const saveSettings = async () => {
   <button 
     class="rkn-button"
     @click="saveSettings"
-  >Save</button>
+  >Apply</button>
 </div>
 </template>
 

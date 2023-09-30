@@ -69,7 +69,9 @@ export const loadAndResizeImageToCanvas = async (canvasImage: CanvasImageSource,
   canvasContext.drawImage(canvasImage, 0, 0, imgWidth, imgHeight, 0, 0, imgWidth*zoom, imgHeight*zoom)
 }
 
-export const cloneCanvasElement = (oldCanvas: HTMLCanvasElement) => {
+export const cloneCanvasElement = async (oldCanvas: HTMLCanvasElement) => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
   //create a new canvas
   const newCanvas = document.createElement('canvas');
   const context = newCanvas.getContext('2d');
