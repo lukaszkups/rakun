@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import { ColorType, KeyableInterface } from 'helpers/types';
+import { Tools } from '@/helpers/enums';
 
 interface UpdatePropPayload {
   name: string;
@@ -20,6 +21,7 @@ const store = createStore({
       canvasGridCtx: null,
       canvasImageCtx: null,
       canvasThumbnailCtx: null,
+      selectedTool: Tools.pencil,
     }
   },
   mutations: {
