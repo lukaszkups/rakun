@@ -32,7 +32,6 @@ const canvasHoverCtx = computed({
   }
 });
 
-
 const canvasGridCtx = computed({
   get() {
     return store.state.canvasGridCtx;
@@ -52,6 +51,7 @@ const canvasImageCtx = computed({
 });
 
 const mouseDown = ref(false);
+let drawStartPoint: [number | undefined, number | undefined] = [undefined, undefined];
 let markedPixels: Array<[number, number]> = [];
 
 const highlightCurrentDrawingCell = async (e: Event) => {
@@ -74,6 +74,12 @@ const onMouseUp = () => {
   markedPixels = [];
 } 
 
+const onMouseDown = (e: MouseEvent) => {
+  mouseDown.value = true;
+  const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
+  drawStartPoint = [ pos.x, pos.y ];
+}
+
 onMounted(() => {
   canvasHoverCtx.value = (canvasHoverRef as any)._value.getContext('2d');
   canvasGridCtx.value = (canvasGridRef as any)._value.getContext('2d');
@@ -91,7 +97,7 @@ onMounted(() => {
     :width="canvasWidth"
     :height="canvasHeight"
     @mousemove="highlightCurrentDrawingCell"
-    @mousedown="mouseDown = true"
+    @mousedown="onMouseDown"
     @mouseup="onMouseUp"
   ></canvas>
   <canvas 
