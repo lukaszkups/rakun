@@ -35,8 +35,8 @@ const saveSettings = async () => {
     // restore canvas contents
     if (previousZoom !== store.state.zoom) {
       // make sure canvas is clear
-      // await clearCanvas(store.state.canvasImageCtx, canvasWidth, canvasHeight);
-      await loadAndResizeImageToCanvas(canvasClone, store.state.canvasImageCtx, imgData, localCanvasWidth.value * previousZoom, localCanvasHeight.value * previousZoom, store.state.zoom);
+      await clearCanvas(store.state.canvasImageCtx, canvasWidth, canvasHeight);
+      await loadAndResizeImageToCanvas(canvasClone, store.state.canvasImageCtx, localCanvasWidth.value, localCanvasHeight.value, previousZoom, store.state.zoom);
     } else {
       // make sure canvas is clear
       await clearCanvas(store.state.canvasImageCtx, canvasWidth, canvasHeight);

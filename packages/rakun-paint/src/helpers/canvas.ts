@@ -62,11 +62,12 @@ export const loadImageToCanvas = async (canvasContext: CanvasRenderingContext2D,
   canvasContext.putImageData(imgData, 0, 0);
 }
 
-export const loadAndResizeImageToCanvas = async (canvasImage: CanvasImageSource, canvasContext: CanvasRenderingContext2D, imgWidth?: number, imgHeight?: number, zoom?: number) => {
+export const loadAndResizeImageToCanvas = async (canvasSourceElement: HTMLCanvasElement, canvasContext: CanvasRenderingContext2D, imgWidth: number, imgHeight: number, previousZoom: number, currentZoom: number) => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
+  console.log(previousZoom, currentZoom)
   // @ts-ignore-next-line
-  canvasContext.drawImage(canvasImage, 0, 0, imgWidth, imgHeight, 0, 0, imgWidth*zoom, imgHeight*zoom)
+  canvasContext.drawImage(canvasSourceElement, 0, 0, imgWidth * previousZoom, imgHeight * previousZoom, 0, 0, imgWidth * currentZoom, imgHeight * currentZoom);
 }
 
 export const cloneCanvasElement = async (oldCanvas: HTMLCanvasElement) => {
