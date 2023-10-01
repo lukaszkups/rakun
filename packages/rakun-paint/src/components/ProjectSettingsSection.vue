@@ -37,15 +37,17 @@ const saveSettings = async () => {
       // make sure canvas is clear
       await clearCanvas(store.state.canvasImageCtx, canvasWidth, canvasHeight);
       await loadAndResizeImageToCanvas(canvasClone, store.state.canvasImageCtx, localCanvasWidth.value, localCanvasHeight.value, previousZoom, store.state.zoom);
+        // redraw grid canvas
+      await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
+      await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
     } else {
       // make sure canvas is clear
       await clearCanvas(store.state.canvasImageCtx, canvasWidth, canvasHeight);
       await loadImageToCanvas(store.state.canvasImageCtx, imgData, localCanvasWidth.value * store.state.zoom, localCanvasHeight.value * store.state.zoom);
+      // redraw grid canvas
+      await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
+      await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom); 
     }
-  
-    // redraw grid canvas
-    await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
-    await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom);
   }
   // check if save is needed to avoid unnecessary store action dispatches
   if (localFps.value !== store.state.fps) {

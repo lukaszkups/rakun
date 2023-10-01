@@ -80,7 +80,6 @@ onMounted(() => {
   drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
 });
 </script>
-
 <template>
 <div class="rkn-canvas-wrapper">
   <canvas 
@@ -123,6 +122,8 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+@import './../styles/style.scss';
+
 .rkn-canvas-wrapper {
   flex: 5;
   overflow: auto;
