@@ -65,7 +65,6 @@ export const loadImageToCanvas = async (canvasContext: CanvasRenderingContext2D,
 export const loadAndResizeImageToCanvas = async (canvasSourceElement: HTMLCanvasElement, canvasContext: CanvasRenderingContext2D, imgWidth: number, imgHeight: number, previousZoom: number, currentZoom: number) => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
-  console.log(previousZoom, currentZoom)
   // @ts-ignore-next-line
   canvasContext.drawImage(canvasSourceElement, 0, 0, imgWidth * previousZoom, imgHeight * previousZoom, 0, 0, imgWidth * currentZoom, imgHeight * currentZoom);
 }
