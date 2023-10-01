@@ -47,6 +47,8 @@ const saveSettings = async () => {
       // redraw grid canvas
       await clearCanvas(store.state.canvasGridCtx, canvasWidth, canvasHeight);
       await drawGrid(store.state.canvasGridCtx, canvasWidth, canvasHeight, 'pink', store.state.zoom); 
+      // resize and draw on thumbnail 
+      await loadAndResizeImageToCanvas(canvasClone, store.state.canvasThumbnailCtx, localCanvasWidth.value, localCanvasHeight.value, previousZoom, 2);
     }
   }
   // check if save is needed to avoid unnecessary store action dispatches
