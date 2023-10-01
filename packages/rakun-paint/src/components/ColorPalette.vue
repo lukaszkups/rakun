@@ -44,7 +44,7 @@ const removeColorFromPalette = (index: number) => {
   list-style-type: none;
   margin: 15px 0 0 -1px;
   padding: 0;
-
+  max-width: 100%;
 
   &-item {
     display: inline-block;

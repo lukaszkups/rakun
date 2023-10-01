@@ -6,3 +6,8 @@ export interface ColorType {
 export interface KeyableInterface {
   [key: string]: any;
 }
+
+export interface RknMouseEvent extends MouseEvent {
+  layerX: Number;
+  layerY: Number;
+}

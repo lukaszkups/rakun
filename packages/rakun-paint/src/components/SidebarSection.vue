@@ -47,8 +47,16 @@ const toggleCollapsed = () => {
     color: #fff;
     font-weight: 900;
     text-transform: uppercase;
-    padding: 5px;
+    padding: 5px 5px 5px 10px;
+    margin: 0;
   }
+
+  &-content {
+    box-sizing: border-box;
+    padding: 5px;
+    opacity: 1;
+  }
+
   &-wrapper {
     &--collapsed {
       .rkn-sidebar__section-heading {
@@ -58,6 +66,8 @@ const toggleCollapsed = () => {
       .rkn-sidebar__section-content {
         height: 0;
         overflow: hidden;
+        opacity: 0;
+        padding: 0;
       }
     }
   }

@@ -19,6 +19,7 @@ const store = createStore({
       canvasHoverCtx: null,
       canvasGridCtx: null,
       canvasImageCtx: null,
+      canvasThumbnailCtx: null,
     }
   },
   mutations: {

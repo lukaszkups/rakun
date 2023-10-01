@@ -4,12 +4,13 @@ import ColorPicker from './ColorPicker.vue';
 import ColorPalette from './ColorPalette.vue';
 import ProjectSettingsSection from './ProjectSettingsSection.vue';
 import PaintTools from './PaintTools.vue';
+import CanvasThumbnail from './CanvasThumbnail.vue';
 </script>
 
 <template>
 <div class="rkn-sidebar">
   <sidebar-section heading="Overview">
-    <canvas />
+    <canvas-thumbnail />
   </sidebar-section>
   <sidebar-section heading="Tools">
     <paint-tools />
@@ -30,7 +31,7 @@ import PaintTools from './PaintTools.vue';
 .rkn-sidebar {
   border-left: 1px solid $gray-color;
   height: 100vh;
-  padding-left: 5px;
+  padding: 0;
   flex: 1;
   flex-grow: 0;
 }

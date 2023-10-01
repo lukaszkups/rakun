@@ -1,9 +1,17 @@
 import { nextTick } from "vue";
+import { RknMouseEvent } from "./types";
 
-export const calculateRealMousePosition = (e: MouseEvent, element: HTMLElement | HTMLCanvasElement) => {
+export const calculateRealMousePosition = (e: RknMouseEvent, element: HTMLElement | HTMLCanvasElement) => {
+  if (e.layerX === undefined || e.layerY === undefined) {
+    console.error('layerX/layerY MouseEvent property not supported, it is not advised to use zoom that makes canvas scroll!');
+    return {
+      x: e.clientX - element.offsetLeft,
+      y: e.clientY - element.offsetTop,
+    }
+  }
   return {
-    x: e.clientX - element.offsetLeft,
-    y: e.clientY - element.offsetTop,
+    x: e.layerX,
+    y: e.layerY,
   }
 }
 

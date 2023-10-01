@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition } from '@/helpers/canvas';
+import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition, loadAndResizeImageToCanvas } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { clearCanvas } from '@/helpers/canvas';
 
@@ -16,6 +16,7 @@ const canvasHeight = computed(() => {
 });
 const selectedColor = computed(() => store.state.selectedColor);
 const selectedOpacity = computed(() => store.state.selectedOpacity);
+const canvasThumbnailCtx = computed(() => store.state.canvasThumbnailCtx);
 
 const canvasHoverRef = ref(null);
 const canvasGridRef = ref(null);
@@ -63,6 +64,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
   if (mouseDown.value) {
     if (!wasPixelMarked(markedPixels, gridX, gridY)) {
       drawSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value, colorToDraw);
+      loadAndResizeImageToCanvas(canvasImageCtx.value.canvas, canvasThumbnailCtx.value, canvasWidth.value, canvasHeight.value, zoom.value, 2);
     }
   }
 }
