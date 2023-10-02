@@ -94,3 +94,8 @@ export const cloneCanvasElement = async (oldCanvas: HTMLCanvasElement) => {
   //return the new canvas
   return newCanvas;
 }
+
+export const drawLineOnCanvas = async () => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
+} 

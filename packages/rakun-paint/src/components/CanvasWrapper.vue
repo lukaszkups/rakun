@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition, loadAndResizeImageToCanvas } from '@/helpers/canvas';
+import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition, loadAndResizeImageToCanvas, clearCanvas, drawLineOnCanvas } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
-import { clearCanvas } from '@/helpers/canvas';
+import { Tools } from '@/helpers/enums';
 
 const store = useStore();
 
@@ -63,8 +63,11 @@ const highlightCurrentDrawingCell = async (e: Event) => {
   drawSquareOnCanvas(canvasHoverCtx.value, gridX, gridY, zoom.value, colorToDraw);
   if (mouseDown.value) {
     if (!wasPixelMarked(markedPixels, gridX, gridY)) {
-      drawSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value, colorToDraw);
-      loadAndResizeImageToCanvas(canvasImageCtx.value.canvas, canvasThumbnailCtx.value, canvasWidth.value, canvasHeight.value, zoom.value, 2);
+      if (store.state.selectedTool === Tools.pencil) {
+        drawSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value, colorToDraw);
+      } else if (store.state.selectedTool === Tools.line) {
+        drawLineOnCanvas(canvasHoverCtx.value, gridX, gridY, zoom.value, colorToDraw);
+      }
     }
   }
 }
@@ -72,6 +75,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
 const onMouseUp = () => {
   mouseDown.value = false; 
   markedPixels = [];
+  loadAndResizeImageToCanvas(canvasImageCtx.value.canvas, canvasThumbnailCtx.value, canvasWidth.value, canvasHeight.value, zoom.value, 2);
 } 
 
 const onMouseDown = (e: MouseEvent) => {
