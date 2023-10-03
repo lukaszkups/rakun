@@ -61,6 +61,7 @@ const canvasImageCtx = computed({
 });
 
 const mouseDown = ref(false);
+// eslint-disable-next-line
 let drawStartPoint: [Number | undefined, Number | undefined] = [
   undefined,
   undefined,
@@ -74,7 +75,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
     canvasHeight.value,
   );
   const pos = calculateRealMousePosition(
-    e as unknown as RknMouseEvent,
+    e as RknMouseEvent,
     (canvasHoverRef as any)._value,
   );
   const colorToDraw = convertHexWithOpacityToRGBA(

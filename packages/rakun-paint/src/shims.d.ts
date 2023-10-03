@@ -1,5 +1,4 @@
 declare module '@/helpers/helpers';
-declare module '@/helpers/types';
 declare module '@/helpers/enums';
 declare module '@/store/store';
 declare module 'vuex' {

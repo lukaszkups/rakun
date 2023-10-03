@@ -1,10 +1,10 @@
 import { nextTick } from 'vue';
-import { RknMouseEvent } from './types';
+import { PositionXY, RknMouseEvent } from './types';
 
 export const calculateRealMousePosition = (
   e: RknMouseEvent,
   element: HTMLElement | HTMLCanvasElement,
-) => {
+): PositionXY => {
   if (e.layerX === undefined || e.layerY === undefined) {
     console.error(
       'layerX/layerY MouseEvent property not supported, it is not advised to use zoom that makes canvas scroll!',
@@ -15,8 +15,8 @@ export const calculateRealMousePosition = (
     };
   }
   return {
-    x: e.layerX,
-    y: e.layerY,
+    x: e.layerX as number,
+    y: e.layerY as number,
   };
 };
 
@@ -31,7 +31,10 @@ export const drawSquareOnCanvas = (
   canvasContext.fillRect(squarePosX, squarePosY, size, size);
 };
 
-export const convertHexWithOpacityToRGBA = (hex: string, opacity: number) => {
+export const convertHexWithOpacityToRGBA = (
+  hex: string,
+  opacity: number,
+): string => {
   const r = parseInt(hex.substring(1, 3), 16);
   const g = parseInt(hex.substring(3, 5), 16);
   const b = parseInt(hex.substring(5, 7), 16);
@@ -45,7 +48,7 @@ export const drawGrid = async (
   canvasHeight: number,
   gridColor: string,
   gridSize: number,
-) => {
+): Promise<void> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
   canvasContext.moveTo(0, 0);
@@ -61,7 +64,10 @@ export const drawGrid = async (
   canvasContext.stroke();
 };
 
-export const calculateGridPosition = (pos: number, gridSize: number) => {
+export const calculateGridPosition = (
+  pos: number,
+  gridSize: number,
+): number => {
   return Math.floor(pos / gridSize) * gridSize;
 };
 
@@ -69,7 +75,7 @@ export const clearCanvas = async (
   canvasContext: CanvasRenderingContext2D,
   canvasWidth: number,
   canvasHeight: number,
-) => {
+): Promise<void> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
   canvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -79,7 +85,7 @@ export const ensureCanvasResized = (
   canvasContext: CanvasRenderingContext2D,
   canvasWidth: number,
   canvasHeight: number,
-) => {
+): void => {
   console.log('ensureCanvasResized', canvasContext, canvasWidth, canvasHeight);
 };
 
@@ -96,7 +102,7 @@ export const getCanvasImage = async (
 export const loadImageToCanvas = async (
   canvasContext: CanvasRenderingContext2D,
   imgData: ImageData,
-) => {
+): Promise<void> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
   canvasContext.putImageData(imgData, 0, 0);
@@ -109,7 +115,7 @@ export const loadAndResizeImageToCanvas = async (
   imgHeight: number,
   previousZoom: number,
   currentZoom: number,
-) => {
+): Promise<void> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
   // @ts-ignore-next-line
@@ -126,7 +132,9 @@ export const loadAndResizeImageToCanvas = async (
   );
 };
 
-export const cloneCanvasElement = async (oldCanvas: HTMLCanvasElement) => {
+export const cloneCanvasElement = async (
+  oldCanvas: HTMLCanvasElement,
+): Promise<HTMLCanvasElement> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
   //create a new canvas
@@ -144,7 +152,7 @@ export const cloneCanvasElement = async (oldCanvas: HTMLCanvasElement) => {
   return newCanvas;
 };
 
-export const drawLineOnCanvas = async () => {
+export const drawLineOnCanvas = async (): Promise<void> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
 };
