@@ -1,26 +1,32 @@
 {
   "root": true,
-  "parser": "vue-eslint-parser",
-  "parserOptions": { 
-    "parser": "@typescript-eslint/parser" 
-  },
-  "env": {
-    "es6": true,
-    "node": true
-  },
-  "plugins": [
-    "@typescript-eslint"
-  ],
   "extends": [
-    "eslint:recommended",
-    "plugin:vue/vue3-recommended",
-    "prettier",
-    "plugin:vue/base",
-    "eslint:recommended",
-    "plugin:vue/vue3-recommended",
-    "plugin:vue/essential",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "eslint-config-prettier"
+    "plugin:vue/vue3-essential",
+    "@vue/eslint-config-typescript",
+    "@vue/eslint-config-prettier"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "all"
+      },
+      {
+        "usePrettierrc": false
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.js", "*.ts", "*.vue"],
+      "rules": {
+        "vue/multi-word-component-names": 0
+      }
+    }
   ]
 }

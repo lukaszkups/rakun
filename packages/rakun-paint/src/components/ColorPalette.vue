@@ -8,35 +8,35 @@ const store = useStore();
 const colors = computed(() => store.state.colors);
 
 const getColorSquareStyle = (color: ColorType) => {
-  return `background-color: ${color.hex}; opacity: ${(color.alpha/100)}`
-}
+  return `background-color: ${color.hex}; opacity: ${color.alpha / 100}`;
+};
 
 const selectColor = (color: ColorType) => {
   store.dispatch('updateSelectedColor', color);
   store.dispatch('saveState');
-}
+};
 
 const removeColorFromPalette = (index: number) => {
   store.dispatch('removeColorFromPalette', index);
-}
+};
 </script>
 
 <template>
-<ul class="rkn-color-palette__list">
-  <li
-    v-for="(color, index) in colors"
-    :key="`rkn-color-palette-item-${color.hex}-${color.alpha}-${index}`"
-    class="rkn-color-palette__list-item"
-    title="Click to select, dbclick to remove"
-    @click="selectColor(color)"
-    @dblclick="removeColorFromPalette(index)"
-  >
-    <div 
-      class="rkn-color-palette__list-item-square"
-      :style="getColorSquareStyle(color)"
-    ></div>
-  </li>
-</ul>
+  <ul class="rkn-color-palette__list">
+    <li
+      v-for="(color, index) in colors"
+      :key="`rkn-color-palette-item-${color.hex}-${color.alpha}-${index}`"
+      class="rkn-color-palette__list-item"
+      title="Click to select, dbclick to remove"
+      @click="selectColor(color)"
+      @dblclick="removeColorFromPalette(index)"
+    >
+      <div
+        class="rkn-color-palette__list-item-square"
+        :style="getColorSquareStyle(color)"
+      ></div>
+    </li>
+  </ul>
 </template>
 
 <style scoped lang="scss">
@@ -48,11 +48,11 @@ const removeColorFromPalette = (index: number) => {
 
   &-item {
     display: inline-block;
-    width: 30px; 
+    width: 30px;
     height: 30px;
     border: 1px solid #000;
     margin: 1px;
-    
+
     &:hover {
       cursor: pointer;
       border-color: crimson;

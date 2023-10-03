@@ -8,21 +8,21 @@ import CanvasThumbnail from './CanvasThumbnail.vue';
 </script>
 
 <template>
-<div class="rkn-sidebar">
-  <sidebar-section heading="Overview">
-    <canvas-thumbnail />
-  </sidebar-section>
-  <sidebar-section heading="Tools">
-    <paint-tools />
-  </sidebar-section>
-  <sidebar-section heading="Colors">
-    <color-picker />
-    <color-palette />
-  </sidebar-section>
-  <sidebar-section heading="Settings">
-    <project-settings-section />
-  </sidebar-section>
-</div>
+  <div class="rkn-sidebar">
+    <sidebar-section heading="Overview">
+      <canvas-thumbnail />
+    </sidebar-section>
+    <sidebar-section heading="Tools">
+      <paint-tools />
+    </sidebar-section>
+    <sidebar-section heading="Colors">
+      <color-picker />
+      <color-palette />
+    </sidebar-section>
+    <sidebar-section heading="Settings">
+      <project-settings-section />
+    </sidebar-section>
+  </div>
 </template>
 
 <style scoped lang="scss">

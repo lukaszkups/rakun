@@ -4,8 +4,8 @@ import { computed, reactive } from 'vue';
 const props = defineProps({
   heading: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 });
 
 const data = reactive({
@@ -17,22 +17,24 @@ const computedClasses = computed(() => {
     'rkn-sidebar__section-wrapper',
     {
       'rkn-sidebar__section-wrapper--collapsed': data.collapsed,
-    }
-  ]
-})
+    },
+  ];
+});
 
 const toggleCollapsed = () => {
   data.collapsed = !data.collapsed;
-}
+};
 </script>
 
 <template>
-<div :class="computedClasses">
-  <p class="rkn-sidebar__section-heading" @dblclick="toggleCollapsed">{{ props.heading }}</p>
-  <div class="rkn-sidebar__section-content">
-    <slot></slot>
+  <div :class="computedClasses">
+    <p class="rkn-sidebar__section-heading" @dblclick="toggleCollapsed">
+      {{ props.heading }}
+    </p>
+    <div class="rkn-sidebar__section-content">
+      <slot></slot>
+    </div>
   </div>
-</div>
 </template>
 
 <style scoped lang="scss">
@@ -62,7 +64,7 @@ const toggleCollapsed = () => {
       .rkn-sidebar__section-heading {
         background-color: $secondary-color;
       }
-      
+
       .rkn-sidebar__section-content {
         height: 0;
         overflow: hidden;

@@ -8,7 +8,7 @@ const store = useStore();
 
 onBeforeMount(() => {
   store.dispatch('loadSavedState');
-})
+});
 </script>
 
 <template>

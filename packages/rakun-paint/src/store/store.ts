@@ -8,7 +8,7 @@ interface UpdatePropPayload {
 }
 
 const store = createStore({
-  state () {
+  state() {
     return {
       colors: [],
       selectedColor: '#000000',
@@ -22,20 +22,22 @@ const store = createStore({
       canvasImageCtx: null,
       canvasThumbnailCtx: null,
       selectedTool: Tools.pencil,
-    }
+    };
   },
   mutations: {
     updateProp(state: KeyableInterface, payload: UpdatePropPayload) {
       state[payload.name] = payload.value;
-    }
+    },
   },
-  actions :{
+  actions: {
     updateProp(context: KeyableInterface, payload: UpdatePropPayload) {
       context.commit('updateProp', payload);
       context.dispatch('saveState'); // TODO - if poor performance then disable this
     },
     loadSavedState(context: KeyableInterface) {
-      const savedState = JSON.parse(localStorage.getItem('rakun-paint-store') || '{}');
+      const savedState = JSON.parse(
+        localStorage.getItem('rakun-paint-store') || '{}',
+      );
       Object.keys(savedState).forEach((key) => {
         // console.log(key, savedState[key]);
         if (context.state.hasOwnProperty(key)) {
@@ -44,15 +46,27 @@ const store = createStore({
       });
     },
     saveState(context: KeyableInterface) {
-      localStorage.setItem('rakun-paint-store', JSON.stringify(context.state || {}));
+      localStorage.setItem(
+        'rakun-paint-store',
+        JSON.stringify(context.state || {}),
+      );
     },
     updateSelectedColor(context: KeyableInterface, payload: ColorType) {
-      context.commit('updateProp', { name: 'selectedColor', value: payload.hex });
-      context.commit('updateProp', { name: 'selectedOpacity', value: payload.alpha });
+      context.commit('updateProp', {
+        name: 'selectedColor',
+        value: payload.hex,
+      });
+      context.commit('updateProp', {
+        name: 'selectedOpacity',
+        value: payload.alpha,
+      });
     },
     // this method returns color index from saved colors (if exists) - for highlighting purposes (UX)
     saveColorToPalette(context: KeyableInterface, payload: ColorType) {
-      const existingColorIndex = context.state.colors.findIndex((color: ColorType) => color.hex === payload.hex && color.alpha === payload.alpha);
+      const existingColorIndex = context.state.colors.findIndex(
+        (color: ColorType) =>
+          color.hex === payload.hex && color.alpha === payload.alpha,
+      );
       if (existingColorIndex > -1) {
         return existingColorIndex;
       } else {
@@ -67,8 +81,8 @@ const store = createStore({
       const colors = [...context.state.colors];
       colors.splice(payload, 1);
       context.commit('updateProp', { name: 'colors', value: colors });
-    }
-  }
+    },
+  },
 });
 
 export default store;

@@ -1,7 +1,16 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, Ref } from 'vue';
 import { useStore } from 'vuex';
-import { calculateRealMousePosition, drawSquareOnCanvas, convertHexWithOpacityToRGBA, drawGrid, calculateGridPosition, loadAndResizeImageToCanvas, clearCanvas, drawLineOnCanvas } from '@/helpers/canvas';
+import {
+  calculateRealMousePosition,
+  drawSquareOnCanvas,
+  convertHexWithOpacityToRGBA,
+  drawGrid,
+  calculateGridPosition,
+  loadAndResizeImageToCanvas,
+  clearCanvas,
+  drawLineOnCanvas,
+} from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { Tools } from '@/helpers/enums';
 
@@ -9,17 +18,17 @@ const store = useStore();
 
 const zoom = computed(() => store.state.zoom);
 const canvasWidth = computed(() => {
-  return store.state.canvasWidth * zoom.value
+  return store.state.canvasWidth * zoom.value;
 });
 const canvasHeight = computed(() => {
-  return store.state.canvasHeight * zoom.value
+  return store.state.canvasHeight * zoom.value;
 });
 const selectedColor = computed(() => store.state.selectedColor);
 const selectedOpacity = computed(() => store.state.selectedOpacity);
 const canvasThumbnailCtx = computed(() => store.state.canvasThumbnailCtx);
 
 const canvasHoverRef = ref(null);
-const canvasGridRef = ref(null);
+const canvasGridRef = ref(null) as Ref;
 const canvasImageRef = ref(null);
 const canvasWholeImageRef = ref(null);
 
@@ -29,7 +38,7 @@ const canvasHoverCtx = computed({
   },
   set(newVal) {
     store.dispatch('updateProp', { name: 'canvasHoverCtx', value: newVal });
-  }
+  },
 });
 
 const canvasGridCtx = computed({
@@ -38,7 +47,7 @@ const canvasGridCtx = computed({
   },
   set(newVal) {
     store.dispatch('updateProp', { name: 'canvasGridCtx', value: newVal });
-  }
+  },
 });
 
 const canvasImageCtx = computed({
@@ -47,90 +56,131 @@ const canvasImageCtx = computed({
   },
   set(newVal) {
     store.dispatch('updateProp', { name: 'canvasImageCtx', value: newVal });
-  }
+  },
 });
 
 const mouseDown = ref(false);
-let drawStartPoint: [number | undefined, number | undefined] = [undefined, undefined];
+let drawStartPoint: [number | undefined, number | undefined] = [
+  undefined,
+  undefined,
+];
 let markedPixels: Array<[number, number]> = [];
 
 const highlightCurrentDrawingCell = async (e: Event) => {
-  await clearCanvas(canvasHoverCtx.value, canvasWidth.value, canvasHeight.value)
+  await clearCanvas(
+    canvasHoverCtx.value,
+    canvasWidth.value,
+    canvasHeight.value,
+  );
   const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
-  const colorToDraw = convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value);
+  const colorToDraw = convertHexWithOpacityToRGBA(
+    selectedColor.value,
+    selectedOpacity.value,
+  );
   const gridX = calculateGridPosition(pos.x, zoom.value);
   const gridY = calculateGridPosition(pos.y, zoom.value);
-  drawSquareOnCanvas(canvasHoverCtx.value, gridX, gridY, zoom.value, colorToDraw);
+  drawSquareOnCanvas(
+    canvasHoverCtx.value,
+    gridX,
+    gridY,
+    zoom.value,
+    colorToDraw,
+  );
   if (mouseDown.value) {
     if (!wasPixelMarked(markedPixels, gridX, gridY)) {
       if (store.state.selectedTool === Tools.pencil) {
-        drawSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value, colorToDraw);
+        drawSquareOnCanvas(
+          canvasImageCtx.value,
+          gridX,
+          gridY,
+          zoom.value,
+          colorToDraw,
+        );
       } else if (store.state.selectedTool === Tools.line) {
-        drawLineOnCanvas(canvasHoverCtx.value, gridX, gridY, zoom.value, colorToDraw);
+        drawLineOnCanvas(
+          canvasHoverCtx.value,
+          gridX,
+          gridY,
+          zoom.value,
+          colorToDraw,
+        );
       }
     }
   }
-}
+};
 
 const onMouseUp = () => {
-  mouseDown.value = false; 
+  mouseDown.value = false;
   markedPixels = [];
-  loadAndResizeImageToCanvas(canvasImageCtx.value.canvas, canvasThumbnailCtx.value, canvasWidth.value, canvasHeight.value, zoom.value, 2);
-} 
+  loadAndResizeImageToCanvas(
+    canvasImageCtx.value.canvas,
+    canvasThumbnailCtx.value,
+    canvasWidth.value,
+    canvasHeight.value,
+    zoom.value,
+    2,
+  );
+};
 
 const onMouseDown = (e: MouseEvent) => {
   mouseDown.value = true;
   const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
-  drawStartPoint = [ pos.x, pos.y ];
-}
+  drawStartPoint = [pos.x, pos.y];
+};
 
 onMounted(() => {
   canvasHoverCtx.value = (canvasHoverRef as any)._value.getContext('2d');
   canvasGridCtx.value = (canvasGridRef as any)._value.getContext('2d');
   canvasImageCtx.value = (canvasImageRef as any)._value.getContext('2d');
 
-  drawGrid(canvasGridCtx.value, canvasWidth.value, canvasHeight.value, 'pink', zoom.value);
+  drawGrid(
+    canvasGridCtx.value,
+    canvasWidth.value,
+    canvasHeight.value,
+    'pink',
+    zoom.value,
+  );
 });
 </script>
 <template>
-<div class="rkn-canvas-wrapper">
-  <canvas 
-    id="rkn-canvas-helper__grid" 
-    ref="canvasGridRef" 
-    class="rkn-drawing-canvas rkn-drawing-canvas--z-index-4"
-    :width="canvasWidth"
-    :height="canvasHeight"
-    @mousemove="highlightCurrentDrawingCell"
-    @mousedown="onMouseDown"
-    @mouseup="onMouseUp"
-  ></canvas>
-  <canvas 
-    id="rkn-canvas-helper__hover"
-    ref="canvasHoverRef"
-    class="rkn-drawing-canvas rkn-drawing-canvas--z-index-3"
-    :width="canvasWidth"
-    :height="canvasHeight"
-  ></canvas>
-  <canvas 
-    id="rkn-canvas-helper__current-image" 
-    ref="canvasImageRef" 
-    class="rkn-drawing-canvas rkn-drawing-canvas--z-index-2"
-    :width="canvasWidth"
-    :height="canvasHeight"
-  ></canvas>
-  <canvas 
-    id="rkn-canvas-helper__current-image" 
-    ref="canvasHelperImageRef" 
-    class="rkn-hidden"
-    :width="canvasWidth"
-    :height="canvasHeight"
-  ></canvas>
-  <canvas 
-    id="rkn-canvas-helper__whole-image" 
-    ref="canvasWholeImageRef" 
-    class="rkn-hidden"
-  ></canvas>
-</div>
+  <div class="rkn-canvas-wrapper">
+    <canvas
+      id="rkn-canvas-helper__grid"
+      ref="canvasGridRef"
+      class="rkn-drawing-canvas rkn-drawing-canvas--z-index-4"
+      :width="canvasWidth"
+      :height="canvasHeight"
+      @mousemove="highlightCurrentDrawingCell"
+      @mousedown="onMouseDown"
+      @mouseup="onMouseUp"
+    ></canvas>
+    <canvas
+      id="rkn-canvas-helper__hover"
+      ref="canvasHoverRef"
+      class="rkn-drawing-canvas rkn-drawing-canvas--z-index-3"
+      :width="canvasWidth"
+      :height="canvasHeight"
+    ></canvas>
+    <canvas
+      id="rkn-canvas-helper__current-image"
+      ref="canvasImageRef"
+      class="rkn-drawing-canvas rkn-drawing-canvas--z-index-2"
+      :width="canvasWidth"
+      :height="canvasHeight"
+    ></canvas>
+    <canvas
+      id="rkn-canvas-helper__current-image"
+      ref="canvasHelperImageRef"
+      class="rkn-hidden"
+      :width="canvasWidth"
+      :height="canvasHeight"
+    ></canvas>
+    <canvas
+      id="rkn-canvas-helper__whole-image"
+      ref="canvasWholeImageRef"
+      class="rkn-hidden"
+    ></canvas>
+  </div>
 </template>
 
 <style scoped lang="scss">

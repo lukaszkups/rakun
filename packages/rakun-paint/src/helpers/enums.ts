@@ -6,4 +6,4 @@ export const Tools = {
   filledSquare: 'FILLED_SQUARE',
   circle: 'CIRCLE',
   filledCircle: 'FILLED_CIRCLE',
-}
+};

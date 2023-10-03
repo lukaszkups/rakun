@@ -9,7 +9,7 @@ const colorHex = computed({
   },
   set(newValue: string) {
     store.dispatch('updateProp', { name: 'selectedColor', value: newValue });
-  }
+  },
 });
 
 const alpha100 = computed({
@@ -18,51 +18,55 @@ const alpha100 = computed({
   },
   set(newValue: number) {
     store.dispatch('updateProp', { name: 'selectedOpacity', value: newValue });
-  }
+  },
 });
 
 const computedColorPickerLabelStyle = computed(() => {
-  return `opacity: ${Number(alpha100.value/100)}; background-color: ${colorHex.value};`;
+  return `opacity: ${Number(alpha100.value / 100)}; background-color: ${
+    colorHex.value
+  };`;
 });
 
 const saveColorToPalette = () => {
-  store.dispatch('saveColorToPalette', { hex: colorHex.value, alpha: alpha100.value });
-}
+  store.dispatch('saveColorToPalette', {
+    hex: colorHex.value,
+    alpha: alpha100.value,
+  });
+};
 </script>
 <template>
-<div class="rkn-flex">
-  <input 
-    id="rkn-color-picker-input" 
-    class="rkn-color-picker-input" 
-    type="color"
-    v-model="colorHex"
-  />
-  <div 
-    class="rkn-color-picker-input-label"
-    @click="propagateClick('#rkn-color-picker-input')"
-  >
-    <div 
-      class="rkn-square"
-      :style="computedColorPickerLabelStyle"
-    ></div>
+  <div class="rkn-flex">
+    <input
+      id="rkn-color-picker-input"
+      v-model="colorHex"
+      class="rkn-color-picker-input"
+      type="color"
+    />
+    <div
+      class="rkn-color-picker-input-label"
+      @click="propagateClick('#rkn-color-picker-input')"
+    >
+      <div class="rkn-square" :style="computedColorPickerLabelStyle"></div>
+    </div>
+    <input v-model="colorHex" type="text" />
   </div>
-  <input type="text" v-model="colorHex" />
-</div>
-<div class="rkn-color-picker__alpha-wrapper">
-  <input 
-    name="color-picker-alpha" 
-    class="rkn-color-picker__alpha" 
-    v-model="alpha100"
-    type="range" 
-    min="0" 
-    max="100" 
-  />
-  <label for="color-picker-alpha">{{ alpha100 }}</label>
-</div>
-<button 
-  class="rkn-paint__tools-button rkn-paint__tools-button--save-color"
-  @click="saveColorToPalette"
->Add to palette</button>
+  <div class="rkn-color-picker__alpha-wrapper">
+    <input
+      v-model="alpha100"
+      name="color-picker-alpha"
+      class="rkn-color-picker__alpha"
+      type="range"
+      min="0"
+      max="100"
+    />
+    <label for="color-picker-alpha">{{ alpha100 }}</label>
+  </div>
+  <button
+    class="rkn-paint__tools-button rkn-paint__tools-button--save-color"
+    @click="saveColorToPalette"
+  >
+    Add to palette
+  </button>
 </template>
 <style scoped lang="scss">
 @import './../styles/style.scss';

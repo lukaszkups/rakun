@@ -15,19 +15,21 @@ const canvasThumbnailCtx = computed({
   },
   set(newVal) {
     store.dispatch('updateProp', { name: 'canvasThumbnailCtx', value: newVal });
-  }
+  },
 });
 
 onMounted(() => {
-  canvasThumbnailCtx.value = (canvasThumbnailRef as any)._value.getContext('2d');
+  canvasThumbnailCtx.value = (canvasThumbnailRef as any)._value.getContext(
+    '2d',
+  );
 });
 </script>
 <template>
-  <canvas 
+  <canvas
     ref="canvasThumbnailRef"
     class="rkn-canvas rkn-canvas-thumbnail"
-    :width="canvasWidth*2"
-    :height="canvasHeight*2"
+    :width="canvasWidth * 2"
+    :height="canvasHeight * 2"
   />
 </template>
 <style scoped lang="scss">
