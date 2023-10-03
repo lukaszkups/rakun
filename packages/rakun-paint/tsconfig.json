@@ -1,5 +1,4 @@
 {
-  "extends": "@seamless/config/tsconfig",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",

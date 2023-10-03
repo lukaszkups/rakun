@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { PositionXY, RknMouseEvent } from './types';
+import { PositionXY, RknMouseEvent } from '@/helpers/types';
 
 export const calculateRealMousePosition = (
   e: RknMouseEvent,
@@ -152,7 +152,44 @@ export const cloneCanvasElement = async (
   return newCanvas;
 };
 
-export const drawLineOnCanvas = async (): Promise<void> => {
+export const drawLineOnCanvas = async (
+  canvasContext: CanvasRenderingContext2D,
+  gridX: number,
+  gridY: number,
+  zoom: number,
+  color: string,
+  lineStartPoint: PositionXY,
+): Promise<PositionXY[]> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
+  const points = [];
+  const dx = Math.abs(gridX - lineStartPoint[0]);
+  const sx = lineStartPoint[0] < gridX ? 1 : -1;
+  const dy = -Math.abs(gridY - lineStartPoint[1]);
+  const sy = lineStartPoint[1] < gridY ? 1 : -1;
+  let err = dx + dy;
+
+  let x1 = lineStartPoint[0];
+  let y1 = lineStartPoint[1];
+  while (true) {
+    points.push([x1, y1]);
+    if (x1 == gridX && y1 == gridY) {
+      break;
+    }
+    const e2 = 2 * err;
+    if (e2 >= dy) {
+      err += dy;
+      x1 += sx;
+    }
+
+    if (e2 <= dx) {
+      err += dx;
+      y1 += sy;
+    }
+  }
+  points.forEach((point: PositionXY) => {
+    drawSquareOnCanvas(canvasContext, point[0], point[1], zoom, color);
+  });
+  // just in case you would like to re-use line points
+  return points;
 };

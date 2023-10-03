@@ -102,13 +102,14 @@ const highlightCurrentDrawingCell = async (e: Event) => {
           colorToDraw,
         );
       } else if (store.state.selectedTool === Tools.line) {
-        // drawLineOnCanvas(
-        //   canvasHoverCtx.value,
-        //   gridX,
-        //   gridY,
-        //   zoom.value,
-        //   colorToDraw,
-        // );
+        drawLineOnCanvas(
+          canvasHoverCtx.value,
+          gridX,
+          gridY,
+          zoom.value,
+          colorToDraw,
+          drawStartPoint,
+        );
       }
     }
   }
