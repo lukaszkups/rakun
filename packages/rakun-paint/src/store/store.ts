@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import { ColorType, KeyableInterface } from 'helpers/types';
+import { ColorType, KeyableInterface } from '@/helpers/types';
 import { Tools } from '@/helpers/enums';
 
 interface UpdatePropPayload {

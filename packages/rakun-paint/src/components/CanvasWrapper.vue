@@ -13,6 +13,7 @@ import {
 } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { Tools } from '@/helpers/enums';
+import { RknMouseEvent } from '@/helpers/types';
 
 const store = useStore();
 
@@ -60,7 +61,7 @@ const canvasImageCtx = computed({
 });
 
 const mouseDown = ref(false);
-let drawStartPoint: [number | undefined, number | undefined] = [
+let drawStartPoint: [Number | undefined, Number | undefined] = [
   undefined,
   undefined,
 ];
@@ -72,13 +73,16 @@ const highlightCurrentDrawingCell = async (e: Event) => {
     canvasWidth.value,
     canvasHeight.value,
   );
-  const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
+  const pos = calculateRealMousePosition(
+    e as unknown as RknMouseEvent,
+    (canvasHoverRef as any)._value,
+  );
   const colorToDraw = convertHexWithOpacityToRGBA(
     selectedColor.value,
     selectedOpacity.value,
   );
-  const gridX = calculateGridPosition(pos.x, zoom.value);
-  const gridY = calculateGridPosition(pos.y, zoom.value);
+  const gridX = calculateGridPosition(pos.x as number, zoom.value);
+  const gridY = calculateGridPosition(pos.y as number, zoom.value);
   drawSquareOnCanvas(
     canvasHoverCtx.value,
     gridX,
@@ -97,13 +101,13 @@ const highlightCurrentDrawingCell = async (e: Event) => {
           colorToDraw,
         );
       } else if (store.state.selectedTool === Tools.line) {
-        drawLineOnCanvas(
-          canvasHoverCtx.value,
-          gridX,
-          gridY,
-          zoom.value,
-          colorToDraw,
-        );
+        // drawLineOnCanvas(
+        //   canvasHoverCtx.value,
+        //   gridX,
+        //   gridY,
+        //   zoom.value,
+        //   colorToDraw,
+        // );
       }
     }
   }
