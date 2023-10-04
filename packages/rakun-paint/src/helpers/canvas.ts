@@ -206,6 +206,14 @@ export const removeSquareOnCanvas = (
   canvasContext.clearRect(squarePosX, squarePosY, size, size);
 };
 
+// Helper method for fillCanvasFragment
+export const checkNearPixelsAndColor = (
+  canvasContext: CanvasRenderingContext2D,
+  squarePosX: number,
+  squarePosY: number,
+  color: string,
+) => {};
+
 export const fillCanvasFragment = (
   canvasContext: CanvasRenderingContext2D,
   squarePosX: number,
@@ -213,5 +221,24 @@ export const fillCanvasFragment = (
   size: number,
   color: string,
 ) => {
+  // tranform rgba to Uint8ClampedArray format that is being used to store pixel colors inside <canvas> elements
+  const colorFill = String(
+    new Uint8ClampedArray(
+      color.split(',').map((n) => Number(n.replace(/\D/g, ''))),
+    ),
+  );
   // first we need to check on what color user clicked so the same ones will be affected by fill method
+  const clickedColor = String(
+    canvasContext.getImageData(squarePosX, squarePosY, 1, 1).data,
+  );
+
+  // if user clicked same color, do nothing
+  if (colorFill === clickedColor) {
+    console.log('Same colors: ', colorFill, clickedColor);
+    return;
+  }
+  // go up and down, check if can move left or right and memorize it
+  // when finished, go left (-1) and go up and down again, checking if can go further left
+  // when cant go any further, go right from initial x,y (if was possible), go up and down, check every time if possible moving further right etc.
+  // when cant move anymore, finish action
 };
