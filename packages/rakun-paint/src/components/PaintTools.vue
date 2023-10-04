@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex';
-import { Tools } from '@/helpers/enums';
+// import { Tools } from '@/helpers/enums';
+import { ToolsArr } from '@/helpers/data';
 
 const store = useStore();
 
@@ -18,43 +19,12 @@ const selectTool = (toolName: string) => {
 <template>
   <div>
     <button
-      :class="computedClass(Tools.pencil)"
-      @click="selectTool(Tools.pencil)"
+      v-for="tool in ToolsArr"
+      :key="tool.id"
+      :class="computedClass(tool.id)"
+      @click="selectTool(tool.id)"
     >
-      Pencil
-    </button>
-    <button
-      :class="computedClass(Tools.select)"
-      @click="selectTool(Tools.select)"
-    >
-      Select
-    </button>
-    <button :class="computedClass(Tools.line)" @click="selectTool(Tools.line)">
-      Line
-    </button>
-    <button
-      :class="computedClass(Tools.square)"
-      @click="selectTool(Tools.square)"
-    >
-      Square
-    </button>
-    <button
-      :class="computedClass(Tools.filledSquare)"
-      @click="selectTool(Tools.filledSquare)"
-    >
-      Filled Square
-    </button>
-    <button
-      :class="computedClass(Tools.circle)"
-      @click="selectTool(Tools.circle)"
-    >
-      Circle
-    </button>
-    <button
-      :class="computedClass(Tools.filledCircle)"
-      @click="selectTool(Tools.filledCircle)"
-    >
-      Filled Circle
+      {{ tool.label }}
     </button>
   </div>
 </template>

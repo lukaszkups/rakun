@@ -10,6 +10,7 @@ import {
   loadAndResizeImageToCanvas,
   clearCanvas,
   drawLineOnCanvas,
+  removeSquareOnCanvas,
 } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { Tools } from '@/helpers/enums';
@@ -95,15 +96,28 @@ const highlightCurrentDrawingCell = async (e: Event) => {
     lastPos = { x: gridX, y: gridY };
   }
 
-  drawSquareOnCanvas(
-    canvasHoverCtx.value,
-    gridX,
-    gridY,
-    zoom.value,
-    colorToDraw.value,
-  );
+  // Eraser have different pixel highlight color than other tools
+  if (store.state.selectedTool === Tools.eraser) {
+    drawSquareOnCanvas(
+      canvasHoverCtx.value,
+      gridX,
+      gridY,
+      zoom.value,
+      'rgba(200, 200, 200, 0.9)',
+    );
+  } else {
+    drawSquareOnCanvas(
+      canvasHoverCtx.value,
+      gridX,
+      gridY,
+      zoom.value,
+      colorToDraw.value,
+    );
+  }
   if (mouseDown.value) {
-    if (!wasPixelMarked(markedPixels, gridX, gridY)) {
+    if (store.state.selectedTool === Tools.eraser) {
+      removeSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value);
+    } else if (!wasPixelMarked(markedPixels, gridX, gridY)) {
       if (store.state.selectedTool === Tools.pencil) {
         drawSquareOnCanvas(
           canvasImageCtx.value,
@@ -126,7 +140,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
   }
 };
 
-const onMouseUp = () => {
+const onMouseUp = async () => {
   if (store.state.selectedTool === Tools.line) {
     drawLineOnCanvas(
       canvasImageCtx.value,
@@ -141,6 +155,12 @@ const onMouseUp = () => {
   mouseDown.value = false;
   markedPixels = [];
 
+  // need to clear thumbnail before refresh to include eraser actions
+  await clearCanvas(
+    canvasThumbnailCtx.value,
+    canvasWidth.value,
+    canvasHeight.value,
+  );
   // copy canvas image to thumbnail canvas in the sidebar
   loadAndResizeImageToCanvas(
     canvasImageCtx.value.canvas,

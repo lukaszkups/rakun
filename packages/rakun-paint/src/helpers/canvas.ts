@@ -196,3 +196,12 @@ export const drawLineOnCanvas = async (
   // Return the result
   return coordinatesArray;
 };
+
+export const removeSquareOnCanvas = (
+  canvasContext: CanvasRenderingContext2D,
+  squarePosX: number,
+  squarePosY: number,
+  size: number,
+) => {
+  canvasContext.clearRect(squarePosX, squarePosY, size, size);
+};
