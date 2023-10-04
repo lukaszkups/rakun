@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { PositionXY, RknMouseEvent } from '@/helpers/types';
+import { PositionArray, PositionXY, RknMouseEvent } from '@/helpers/types';
 
 export const calculateRealMousePosition = (
   e: RknMouseEvent,
@@ -152,44 +152,47 @@ export const cloneCanvasElement = async (
   return newCanvas;
 };
 
+// using Bresenham algorithm for lines
 export const drawLineOnCanvas = async (
   canvasContext: CanvasRenderingContext2D,
-  gridX: number,
-  gridY: number,
+  endX: number,
+  endY: number,
   zoom: number,
   color: string,
-  lineStartPoint: PositionXY,
-): Promise<PositionXY[]> => {
+  lineStartPoint: PositionArray,
+): Promise<PositionArray[]> => {
   // nextTick to be sure that all canvas HTML processing has been finished
   await nextTick();
-  const points = [];
-  const dx = Math.abs(gridX - lineStartPoint[0]);
-  const sx = lineStartPoint[0] < gridX ? 1 : -1;
-  const dy = -Math.abs(gridY - lineStartPoint[1]);
-  const sy = lineStartPoint[1] < gridY ? 1 : -1;
-  let err = dx + dy;
-
-  let x1 = lineStartPoint[0];
-  let y1 = lineStartPoint[1];
-  while (true) {
-    points.push([x1, y1]);
-    if (x1 == gridX && y1 == gridY) {
-      break;
-    }
-    const e2 = 2 * err;
-    if (e2 >= dy) {
-      err += dy;
+  const coordinatesArray: PositionArray[] = [];
+  // Translate coordinates
+  let x1 = calculateGridPosition(lineStartPoint[0] as number, zoom);
+  let y1 = calculateGridPosition(lineStartPoint[1] as number, zoom);
+  const x2 = endX;
+  const y2 = endY;
+  // Define differences and error check
+  const dx = Math.abs(x2 - x1);
+  const dy = Math.abs(y2 - y1);
+  const sx = x1 < x2 ? zoom : -zoom;
+  const sy = y1 < y2 ? zoom : -zoom;
+  let err = dx - dy;
+  // Set first coordinates
+  coordinatesArray.push([x1, y1]);
+  drawSquareOnCanvas(canvasContext, x1, y1, zoom, color);
+  // Main loop
+  while (!(x1 == x2 && y1 == y2)) {
+    const e2 = err << 1;
+    if (e2 > -dy) {
+      err -= dy;
       x1 += sx;
     }
-
-    if (e2 <= dx) {
+    if (e2 < dx) {
       err += dx;
       y1 += sy;
     }
+    // Set coordinates
+    coordinatesArray.push([x1, y1]);
+    drawSquareOnCanvas(canvasContext, x1, y1, zoom, color);
   }
-  points.forEach((point: PositionXY) => {
-    drawSquareOnCanvas(canvasContext, point[0], point[1], zoom, color);
-  });
-  // just in case you would like to re-use line points
-  return points;
+  // Return the result
+  return coordinatesArray;
 };

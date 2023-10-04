@@ -17,4 +17,9 @@ declare module '@/helpers/types' {
     x: number;
     y: number;
   }
+
+  export interface PositionArray {
+    [0]: number | undefined;
+    [1]: number | undefined;
+  }
 }

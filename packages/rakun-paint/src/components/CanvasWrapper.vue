@@ -13,7 +13,8 @@ import {
 } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { Tools } from '@/helpers/enums';
-import { RknMouseEvent } from '@/helpers/types';
+import { PositionArray, RknMouseEvent } from '@/helpers/types';
+import { PositionXY } from '@/helpers/types';
 
 const store = useStore();
 
@@ -28,10 +29,18 @@ const selectedColor = computed(() => store.state.selectedColor);
 const selectedOpacity = computed(() => store.state.selectedOpacity);
 const canvasThumbnailCtx = computed(() => store.state.canvasThumbnailCtx);
 
+let lastPos: PositionXY = { x: 0, y: 0 };
+
 const canvasHoverRef = ref(null);
 const canvasGridRef = ref(null) as Ref;
 const canvasImageRef = ref(null);
 const canvasWholeImageRef = ref(null);
+let gridX!: number;
+let gridY!: number;
+
+const colorToDraw = computed(() =>
+  convertHexWithOpacityToRGBA(selectedColor.value, selectedOpacity.value),
+);
 
 const canvasHoverCtx = computed({
   get() {
@@ -62,34 +71,36 @@ const canvasImageCtx = computed({
 
 const mouseDown = ref(false);
 // eslint-disable-next-line
-let drawStartPoint: [Number | undefined, Number | undefined] = [
+let drawStartPoint: PositionArray = [
   undefined,
   undefined,
 ];
 let markedPixels: Array<[number, number]> = [];
 
 const highlightCurrentDrawingCell = async (e: Event) => {
-  await clearCanvas(
-    canvasHoverCtx.value,
-    canvasWidth.value,
-    canvasHeight.value,
-  );
   const pos = calculateRealMousePosition(
     e as RknMouseEvent,
     (canvasHoverRef as any)._value,
   );
-  const colorToDraw = convertHexWithOpacityToRGBA(
-    selectedColor.value,
-    selectedOpacity.value,
-  );
-  const gridX = calculateGridPosition(pos.x as number, zoom.value);
-  const gridY = calculateGridPosition(pos.y as number, zoom.value);
+  gridX = calculateGridPosition(pos.x as number, zoom.value);
+  gridY = calculateGridPosition(pos.y as number, zoom.value);
+
+  // to avoid unnecessary canvas clear
+  if (gridX !== lastPos.x || gridY !== lastPos.y) {
+    await clearCanvas(
+      canvasHoverCtx.value,
+      canvasWidth.value,
+      canvasHeight.value,
+    );
+    lastPos = { x: gridX, y: gridY };
+  }
+
   drawSquareOnCanvas(
     canvasHoverCtx.value,
     gridX,
     gridY,
     zoom.value,
-    colorToDraw,
+    colorToDraw.value,
   );
   if (mouseDown.value) {
     if (!wasPixelMarked(markedPixels, gridX, gridY)) {
@@ -99,7 +110,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
           gridX,
           gridY,
           zoom.value,
-          colorToDraw,
+          colorToDraw.value,
         );
       } else if (store.state.selectedTool === Tools.line) {
         drawLineOnCanvas(
@@ -107,7 +118,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
           gridX,
           gridY,
           zoom.value,
-          colorToDraw,
+          colorToDraw.value,
           drawStartPoint,
         );
       }
@@ -116,8 +127,21 @@ const highlightCurrentDrawingCell = async (e: Event) => {
 };
 
 const onMouseUp = () => {
+  if (store.state.selectedTool === Tools.line) {
+    drawLineOnCanvas(
+      canvasImageCtx.value,
+      gridX,
+      gridY,
+      zoom.value,
+      colorToDraw.value,
+      drawStartPoint,
+    );
+  }
+
   mouseDown.value = false;
   markedPixels = [];
+
+  // copy canvas image to thumbnail canvas in the sidebar
   loadAndResizeImageToCanvas(
     canvasImageCtx.value.canvas,
     canvasThumbnailCtx.value,
@@ -130,7 +154,10 @@ const onMouseUp = () => {
 
 const onMouseDown = (e: MouseEvent) => {
   mouseDown.value = true;
-  const pos = calculateRealMousePosition(e, (canvasHoverRef as any)._value);
+  const pos = calculateRealMousePosition(
+    e as RknMouseEvent,
+    (canvasHoverRef as any)._value,
+  );
   drawStartPoint = [pos.x, pos.y];
 };
 
