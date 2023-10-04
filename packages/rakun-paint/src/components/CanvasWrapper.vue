@@ -11,6 +11,7 @@ import {
   clearCanvas,
   drawLineOnCanvas,
   removeSquareOnCanvas,
+  fillCanvasFragment,
 } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { Tools } from '@/helpers/enums';
@@ -149,6 +150,14 @@ const onMouseUp = async () => {
       zoom.value,
       colorToDraw.value,
       drawStartPoint,
+    );
+  } else if (store.state.selectedTool === Tools.fill) {
+    fillCanvasFragment(
+      canvasImageCtx.value,
+      gridX,
+      gridY,
+      zoom.value,
+      colorToDraw.value,
     );
   }
 

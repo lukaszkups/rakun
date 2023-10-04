@@ -205,3 +205,13 @@ export const removeSquareOnCanvas = (
 ) => {
   canvasContext.clearRect(squarePosX, squarePosY, size, size);
 };
+
+export const fillCanvasFragment = (
+  canvasContext: CanvasRenderingContext2D,
+  squarePosX: number,
+  squarePosY: number,
+  size: number,
+  color: string,
+) => {
+  // first we need to check on what color user clicked so the same ones will be affected by fill method
+};
