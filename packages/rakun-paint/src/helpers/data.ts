@@ -22,8 +22,8 @@ export const ToolsArr = [
     label: 'Line',
   },
   {
-    id: Tools.square,
-    label: 'Square',
+    id: Tools.rect,
+    label: 'Rectangle',
   },
   {
     id: Tools.circle,

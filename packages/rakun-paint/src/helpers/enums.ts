@@ -4,6 +4,6 @@ export const Tools = {
   select: 'SELECT',
   fill: 'FILL',
   line: 'LINE',
-  square: 'SQUARE',
+  rect: 'RECTANGLE',
   circle: 'CIRCLE',
 };

@@ -152,6 +152,50 @@ export const cloneCanvasElement = async (
   return newCanvas;
 };
 
+export const drawRectOnCanvas = async (
+  canvasContext: CanvasRenderingContext2D,
+  endX: number,
+  endY: number,
+  zoom: number,
+  color: string,
+  rectStartPoint: PositionArray,
+): Promise<PositionArray[]> => {
+  await nextTick();
+  const coordinatesArray: PositionArray[] = [];
+  // Translate coordinates
+  const x1 = calculateGridPosition(rectStartPoint[0] as number, zoom);
+  const y1 = calculateGridPosition(rectStartPoint[1] as number, zoom);
+  const x2 = endX;
+  const y2 = endY;
+  // coords object will contain real starting and ending points, depending on direction
+  const coords = { x1, x2, y1, y2 };
+  if (x1 > x2) {
+    coords.x1 = x2;
+    coords.x2 = x1;
+  }
+  if (y1 > y2) {
+    coords.y1 = y2;
+    coords.y2 = y1;
+  }
+
+  // draw horizontal lines
+  for (let x = coords.x1; x <= coords.x2; x += zoom) {
+    await drawSquareOnCanvas(canvasContext, x, coords.y1, zoom, color);
+    coordinatesArray.push([x, coords.y1]);
+    await drawSquareOnCanvas(canvasContext, x, coords.y2, zoom, color);
+    coordinatesArray.push([x, coords.y2]);
+  }
+  // draw vertical lines
+  for (let y = coords.y1; y <= coords.y2; y += zoom) {
+    await drawSquareOnCanvas(canvasContext, coords.x1, y, zoom, color);
+    coordinatesArray.push([coords.x1, y]);
+    await drawSquareOnCanvas(canvasContext, coords.x2, y, zoom, color);
+    coordinatesArray.push([coords.x2, y]);
+  }
+  // Return the result
+  return coordinatesArray;
+};
+
 // using Bresenham algorithm for lines
 export const drawLineOnCanvas = async (
   canvasContext: CanvasRenderingContext2D,

@@ -12,6 +12,7 @@ import {
   drawLineOnCanvas,
   removeSquareOnCanvas,
   fillCanvasFragment,
+  drawRectOnCanvas,
 } from '@/helpers/canvas';
 import { wasPixelMarked } from '@/helpers/helpers';
 import { Tools } from '@/helpers/enums';
@@ -136,6 +137,15 @@ const highlightCurrentDrawingCell = async (e: Event) => {
           colorToDraw.value,
           drawStartPoint,
         );
+      } else if (store.state.selectedTool === Tools.rect) {
+        drawRectOnCanvas(
+          canvasHoverCtx.value,
+          gridX,
+          gridY,
+          zoom.value,
+          colorToDraw.value,
+          drawStartPoint,
+        );
       }
     }
   }
@@ -143,7 +153,16 @@ const highlightCurrentDrawingCell = async (e: Event) => {
 
 const onMouseUp = async () => {
   if (store.state.selectedTool === Tools.line) {
-    drawLineOnCanvas(
+    await drawLineOnCanvas(
+      canvasImageCtx.value,
+      gridX,
+      gridY,
+      zoom.value,
+      colorToDraw.value,
+      drawStartPoint,
+    );
+  } else if (store.state.selectedTool === Tools.rect) {
+    await drawRectOnCanvas(
       canvasImageCtx.value,
       gridX,
       gridY,
@@ -152,7 +171,7 @@ const onMouseUp = async () => {
       drawStartPoint,
     );
   } else if (store.state.selectedTool === Tools.fill) {
-    fillCanvasFragment(
+    await fillCanvasFragment(
       canvasImageCtx.value,
       gridX,
       gridY,
