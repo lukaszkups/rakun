@@ -3,7 +3,7 @@ import { computed, ref, onMounted, Ref } from 'vue';
 import { useStore } from 'vuex';
 import {
   calculateRealMousePosition,
-  drawSquareOnCanvas,
+  drawPixelOnCanvas,
   convertHexWithOpacityToRGBA,
   drawGrid,
   calculateGridPosition,
@@ -100,7 +100,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
 
   // Eraser have different pixel highlight color than other tools
   if (store.state.selectedTool === Tools.eraser) {
-    drawSquareOnCanvas(
+    drawPixelOnCanvas(
       canvasHoverCtx.value,
       gridX,
       gridY,
@@ -108,7 +108,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
       'rgba(200, 200, 200, 0.9)',
     );
   } else {
-    drawSquareOnCanvas(
+    drawPixelOnCanvas(
       canvasHoverCtx.value,
       gridX,
       gridY,
@@ -121,7 +121,7 @@ const highlightCurrentDrawingCell = async (e: Event) => {
       removeSquareOnCanvas(canvasImageCtx.value, gridX, gridY, zoom.value);
     } else if (!wasPixelMarked(markedPixels, gridX, gridY)) {
       if (store.state.selectedTool === Tools.pencil) {
-        drawSquareOnCanvas(
+        drawPixelOnCanvas(
           canvasImageCtx.value,
           gridX,
           gridY,

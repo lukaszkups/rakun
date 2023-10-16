@@ -20,7 +20,7 @@ export const calculateRealMousePosition = (
   };
 };
 
-export const drawSquareOnCanvas = (
+export const drawPixelOnCanvas = (
   canvasContext: CanvasRenderingContext2D,
   squarePosX: number,
   squarePosY: number,
@@ -180,16 +180,16 @@ export const drawRectOnCanvas = async (
 
   // draw horizontal lines
   for (let x = coords.x1; x <= coords.x2; x += zoom) {
-    await drawSquareOnCanvas(canvasContext, x, coords.y1, zoom, color);
+    await drawPixelOnCanvas(canvasContext, x, coords.y1, zoom, color);
     coordinatesArray.push([x, coords.y1]);
-    await drawSquareOnCanvas(canvasContext, x, coords.y2, zoom, color);
+    await drawPixelOnCanvas(canvasContext, x, coords.y2, zoom, color);
     coordinatesArray.push([x, coords.y2]);
   }
   // draw vertical lines
   for (let y = coords.y1; y <= coords.y2; y += zoom) {
-    await drawSquareOnCanvas(canvasContext, coords.x1, y, zoom, color);
+    await drawPixelOnCanvas(canvasContext, coords.x1, y, zoom, color);
     coordinatesArray.push([coords.x1, y]);
-    await drawSquareOnCanvas(canvasContext, coords.x2, y, zoom, color);
+    await drawPixelOnCanvas(canvasContext, coords.x2, y, zoom, color);
     coordinatesArray.push([coords.x2, y]);
   }
   // Return the result
@@ -221,7 +221,7 @@ export const drawLineOnCanvas = async (
   let err = dx - dy;
   // Set first coordinates
   coordinatesArray.push([x1, y1]);
-  drawSquareOnCanvas(canvasContext, x1, y1, zoom, color);
+  drawPixelOnCanvas(canvasContext, x1, y1, zoom, color);
   // Main loop
   while (!(x1 == x2 && y1 == y2)) {
     const e2 = err << 1;
@@ -235,7 +235,7 @@ export const drawLineOnCanvas = async (
     }
     // Set coordinates
     coordinatesArray.push([x1, y1]);
-    drawSquareOnCanvas(canvasContext, x1, y1, zoom, color);
+    drawPixelOnCanvas(canvasContext, x1, y1, zoom, color);
   }
   // Return the result
   return coordinatesArray;
