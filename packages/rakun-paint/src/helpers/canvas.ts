@@ -241,6 +241,93 @@ export const drawLineOnCanvas = async (
   return coordinatesArray;
 };
 
+// Circle draw logic inspiration: https://codepen.io/sdvg/pen/bGweeM
+export const drawCircleOnCanvas = async (
+  canvasContext: CanvasRenderingContext2D,
+  endX: number,
+  endY: number,
+  zoom: number,
+  color: string,
+  circleStartPoint: PositionArray,
+) => {
+  // nextTick to be sure that all canvas HTML processing has been finished
+  await nextTick();
+  const coordinatesArray: PositionArray[] = [];
+  // Translate coordinates
+  const x1 = calculateGridPosition(circleStartPoint[0] as number, zoom);
+  const y1 = calculateGridPosition(circleStartPoint[1] as number, zoom);
+  const x2 = endX;
+  const y2 = endY;
+  // Define differences and error check
+  const dx = Math.abs(x2 - x1);
+  const dy = Math.abs(y2 - y1);
+  // calculate coords of the center of the circle
+  const ccx = x1 > x2 ? x2 + dx : x1 + dx;
+  const ccy = y1 > y2 ? y2 + dy : y1 + dy;
+  const radius = Math.sqrt(dx * dx + dy * dy);
+  // const sx = x1 < x2 ? zoom : -zoom;
+  // const sy = y1 < y2 ? zoom : -zoom;
+  // let err = dx - dy;
+
+  let step = 0;
+  let xCalc = radius;
+  let radiusError = zoom - radius;
+  console.log(radius, step);
+  while (radius >= step) {
+    drawPixelOnCanvas(canvasContext, xCalc + ccx, step + ccy, zoom, color);
+    coordinatesArray.push([xCalc + ccx, step + ccy]);
+    drawPixelOnCanvas(canvasContext, step + ccx, xCalc + ccy, zoom, color);
+    coordinatesArray.push([step + ccx, xCalc + ccy]);
+    drawPixelOnCanvas(canvasContext, -xCalc + ccx, step + ccy, zoom, color);
+    coordinatesArray.push([-xCalc + ccx, step + ccy]);
+    drawPixelOnCanvas(canvasContext, -step + ccx, xCalc + ccy, zoom, color);
+    coordinatesArray.push([-step + ccx, xCalc + ccy]);
+    drawPixelOnCanvas(canvasContext, -xCalc + ccx, -step + ccy, zoom, color);
+    coordinatesArray.push([-xCalc + ccx, -step + ccy]);
+    drawPixelOnCanvas(canvasContext, -step + ccx, -xCalc + ccy, zoom, color);
+    coordinatesArray.push([-step + ccx, -xCalc + ccy]);
+    drawPixelOnCanvas(canvasContext, xCalc + ccx, -step + ccy, zoom, color);
+    coordinatesArray.push([-step + ccx, -xCalc + ccy]);
+    drawPixelOnCanvas(canvasContext, step + ccx, -xCalc + ccy, zoom, color);
+    coordinatesArray.push([step + ccx, -xCalc + ccy]);
+    step += zoom;
+
+    if (radiusError < 0) {
+      radiusError += 2 * step + zoom;
+    } else {
+      xCalc -= zoom;
+      radiusError += 2 * (step - xCalc + zoom);
+    }
+  }
+  console.log(coordinatesArray);
+  return coordinatesArray;
+  // var DrawCirle = function (x0, y0, radius) {
+  //   var x = radius;
+  //   var y = 0;
+  //   var radiusError = 1 - x;
+
+  //   while (x >= y) {
+  //     DrawPixel(x + x0, y + y0);
+  //     DrawPixel(y + x0, x + y0);
+  //     DrawPixel(-x + x0, y + y0);
+  //     DrawPixel(-y + x0, x + y0);
+  //     DrawPixel(-x + x0, -y + y0);
+  //     DrawPixel(-y + x0, -x + y0);
+  //     DrawPixel(x + x0, -y + y0);
+  //     DrawPixel(y + x0, -x + y0);
+  //     y++;
+
+  //     if (radiusError < 0) {
+  //         radiusError += 2 * y + 1;
+  //     }
+  //     else {
+  //         x--;
+  //         radiusError+= 2 * (y - x + 1);
+  //     }
+  //   }
+  // };
+};
+
 export const removeSquareOnCanvas = (
   canvasContext: CanvasRenderingContext2D,
   squarePosX: number,
